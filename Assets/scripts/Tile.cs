@@ -16,7 +16,6 @@ public class Tile : MonoBehaviour
 			return;
 		
 		m_material = Instantiate(material);
-		material = m_material;
 		m_material.mainTextureScale = tiling;
 		GetComponent<SpriteRenderer> ().material = m_material;
 
