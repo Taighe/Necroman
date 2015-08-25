@@ -39,11 +39,7 @@ namespace nENTITY
 
 		protected bool IsINTERACTABLE;
 
-		public GameObject interactable;
-
-		public GameObject pickUp;
-
-		void OnCollisionStay2D(Collision2D collision)
+		public void OnCollisionStay2D(Collision2D collision)
 		{
 			Vector2 norms = collision.contacts[0].normal;
 
@@ -51,19 +47,9 @@ namespace nENTITY
 
 			m_collisionNormals.x = Mathf.Clamp (m_collisionNormals.x, -1.0f, 1.0f);
 			m_collisionNormals.y = Mathf.Clamp (m_collisionNormals.y, -1.0f, 1.0f);
-
-			if (collision.gameObject.tag == "Interactable") 
-			{
-				IsINTERACTABLE = true;
-				interactable = collision.gameObject;
-			}
-			else
-			{
-				IsINTERACTABLE = false;
-			}
 		}
 
-		void OnCollisionExit2D(Collision2D collision)
+		public void OnCollisionExit2D(Collision2D collision)
 		{
 			Vector2 norms = new Vector2();
 

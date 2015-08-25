@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using nDATACONTROL;
+using nLEVELDATA;
 
 namespace nSCENE
 {
@@ -9,9 +10,18 @@ namespace nSCENE
 		public float levelTime;
 		static float s_levelTime;
 
+		public string dataLink;
+		LevelData data;
+
 		void Awake()
 		{
 			s_levelTime = levelTime;
+			if (dataLink == "")
+				return;
+
+			data = GameObject.Find (dataLink).GetComponent<LevelData> ();
+			data.unlocked = true;
+			DataControl.levelData = data;
 		}
 		
 		// Update is called once per frame
@@ -31,9 +41,7 @@ namespace nSCENE
 				return;
 
 			levelTime = s_levelTime;
-			levelTime -= 1.0f * Time.deltaTime;
-
-			if(levelTime < 0) levelTime = 0;
+			levelTime += 1.0f * Time.deltaTime;
 
 			s_levelTime = levelTime;
 
@@ -44,6 +52,10 @@ namespace nSCENE
 			s_levelTime += time;
 		}
 
+		public static float GetLevelTime()
+		{
+			return s_levelTime;
+		}
 	}
 	
 }

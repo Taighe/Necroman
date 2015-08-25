@@ -17,6 +17,8 @@ namespace nATTACK
 
 		Team m_team;
 
+		GameObject m_owner;
+
 		// Use this for initialization
 		void Start () 
 		{
@@ -36,11 +38,22 @@ namespace nATTACK
 
 			}
 
-			if (collision.gameObject.tag == "Player"  || collision.gameObject.tag == "Character" || collision.gameObject.tag == "Interactable") 
+			if (collision.gameObject.tag != "Terrain") 
 			{
 				GameObject _obj = collision.gameObject;
+				GameObject _owner = m_owner;
+
 				if(_obj.GetComponent<Entity>().m_team != m_team)
 				{
+					float degrees;
+					Vector3 _axis = Vector3.zero;
+					transform.rotation.ToAngleAxis(out degrees, out _axis);
+
+					if(_axis.z < 0)
+					{
+						m_owner.GetComponent<Player>().Hop ();
+					}
+
 					_obj.GetComponent<Entity>().Damaged(m_damage);
 					Destroy(this.gameObject);
 				}
@@ -63,6 +76,16 @@ namespace nATTACK
 			m_attackLength = attackLength + Time.time;
 			m_damage = damage;
 			m_team = owner;
+		}
+
+		public void SetAttack(float attackFrame, float attackLength, int damage, Team owner, GameObject origin )
+		{
+			m_timer = Time.time;
+			m_attackFrame = attackFrame;
+			m_attackLength = attackLength + Time.time;
+			m_damage = damage;
+			m_team = owner;
+			m_owner = origin;
 		}
 
 		// Update is called once per frame

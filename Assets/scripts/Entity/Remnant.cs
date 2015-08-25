@@ -6,7 +6,6 @@ namespace nREMNANT
 {
 	public class Remnant : Entity 
 	{
-
 		// Use this for initialization
 		void Start () 
 		{

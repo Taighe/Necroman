@@ -1,26 +1,25 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using nDATACONTROL;
 
 namespace nLEVELDATA
 {
-
 	public class LevelData : MonoBehaviour 
 	{
-		float highScore;
-		public bool locked;
-		Button button;
+		public float highScore;
+		public bool unlocked;
 
 		// Use this for initialization
-		void Start () 
+		void Awake () 
 		{
-			button = GetComponent<Button> ();
+
 		}
-		
+
 		// Update is called once per frame
 		void Update () 
 		{
-			button.interactable = locked;
 		}
+
 	}
 }

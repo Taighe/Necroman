@@ -7,7 +7,6 @@ public class Turret : Entity
 {
 	public GameObject projectile;
 	public float delay;
-	public Camera currentCamera;
 
 	float m_timer;
 
@@ -32,18 +31,13 @@ public class Turret : Entity
 
 	bool CanFire()
 	{
-		Rect _cameraBounds = currentCamera.rect; 
+		if (projectile == null)
+			return false;
 
-		Rect _box = Rect.MinMaxRect(GetComponent<BoxCollider2D> ().bounds.min.x, GetComponent<BoxCollider2D> ().bounds.min.y,
-		                            GetComponent<BoxCollider2D> ().bounds.max.x, GetComponent<BoxCollider2D> ().bounds.max.y);
-
-		//if(_box.Overlaps(_cameraBounds) )
+		if(Time.time > m_timer)
 		{
-			if(Time.time > m_timer)
-			{
-				m_timer = Time.time + delay;
-				return true;
-			}
+			m_timer = Time.time + delay;
+			return true;
 		}
 
 		return false;

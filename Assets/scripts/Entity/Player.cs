@@ -4,6 +4,7 @@ using nREMNANT;
 using nENTITY;
 using nATTACK;
 using nSCENE;
+using nFOLLOWCAMERA;
 
 public class Player : Entity 
 {
@@ -18,6 +19,9 @@ public class Player : Entity
 	public float maxJump;
 	
 	public float recoverTime;
+	
+	GameObject interactable;
+	GameObject pickUp;
 
 	float jumpForce;
 
@@ -44,10 +48,28 @@ public class Player : Entity
 		if (collision.gameObject.name == "Check Point") 
 		{
 			checkPoint = new Vector2(collision.transform.position.x, collision.transform.position.y);
-			if(collision.gameObject.name == "Interactable" && Input.GetButtonDown("Interact"))
-			{
-				collision.gameObject.transform.parent = transform;
-			}
+		}
+	}
+
+	void OnCollisionStay2D(Collision2D collision)
+	{
+		Entity _entity = GetComponent<Entity> ();
+		_entity.OnCollisionStay2D (collision);
+		
+		if(collision.gameObject.tag == "Interactable")
+		{
+			interactable = collision.gameObject;
+		}
+	}
+
+	void OnCollisionExit2D(Collision2D collision)
+	{
+		Entity _entity = GetComponent<Entity> ();
+		_entity.OnCollisionExit2D (collision);
+		
+		if(collision.gameObject.tag == "Interactable")
+		{
+			interactable = null;
 		}
 	}
 
@@ -61,7 +83,8 @@ public class Player : Entity
 	}
 
 	// Update is called once per frame
-	void Update () 
+	void 
+		Update () 
 	{
 		//If game is paused don't update object
 		if (IsPaused() )
@@ -75,7 +98,7 @@ public class Player : Entity
 				m_velocity.x = m_rigid2D.velocity.x;
 				m_velocity.y = m_rigid2D.velocity.y;
 				
-				Controls ();//Inputs linked to player actions
+				Controls ();
 				
 				m_rigid2D.velocity = m_velocity; 
 				break;
@@ -123,12 +146,12 @@ public class Player : Entity
 	
 	void Controls()
 	{
-		if(Input.GetButtonDown("Interact"))
+		if(Input.GetButton("Interact"))
 		{
-			if(IsINTERACTABLE == true)
+			if(pickUp == null)
 			{
 				pickUp = interactable;
-				interactable.transform.parent = transform;
+				pickUp.transform.parent = transform;
 			}
 		}
 
@@ -140,7 +163,6 @@ public class Player : Entity
 			}
 			else
 			{
-				pickUp = null;
 				Throw ();
 			}
 		}
@@ -152,7 +174,7 @@ public class Player : Entity
 				Destroy( (GameObject)m_remnants[i]);
 			}
 
-			GameScene.AddLevelTime(-100);
+			GameScene.AddLevelTime(15.0f);
 		}
 
 		//Jumping
@@ -172,14 +194,33 @@ public class Player : Entity
 			JUMPINITIATED = false;
 		}
 
+
 		//Movement
 		m_velocity.x = Input.GetAxis ("Horizontal") * speed;
 
 		if(Input.GetAxis ("Horizontal") < 0) m_facing = Facing.LEFT;
 		if(Input.GetAxis ("Horizontal") > 0) m_facing = Facing.RIGHT;
 
+		//Camera actions
+		if(Input.GetButton("Peek"))
+		{
+			m_velocity.x = 0;
+			FollowCamera.control.offsetY = Input.GetAxis ("Vertical") * 4;
+		}
+
+		if (Input.GetAxis ("Horizontal") > 0.2 && Input.GetAxis ("Horizontal") < -0.2) 
+		{
+			FollowCamera.control.offsetX = Input.GetAxis ("Horizontal") * 4;
+		}
+
 	}
 
+	public void Hop()
+	{
+		m_velocity.y = maxJump;
+		m_rigid2D.velocity = m_velocity;
+	}
+	
 	void ResetRemenants()
 	{
 
@@ -200,23 +241,34 @@ public class Player : Entity
 
 	void Throw()
 	{
-		interactable.transform.parent = null;
-		Vector2 _force = new Vector2 (2 * (float)m_facing, 5.0f);
-		interactable.GetComponent<Rigidbody2D> ().velocity = _force;
-		interactable = null;
+		Vector2 _force = new Vector2 (m_velocity.x + (5.0f * (float)m_facing) , 5.0f);
+		pickUp.GetComponent<Rigidbody2D> ().velocity = _force;
+		pickUp.transform.parent = null;
+		pickUp = null;
 	}
 
 	void Attack()
 	{
-		float offsetX = 2;
+		float offsetX = 1;
+		float offsetY = 0;
 
-		float offsetY = 2 * Input.GetAxis("Vertical");
+		if(Input.GetAxis("Vertical") < 0)
+		{
+			offsetY = -1;
+			offsetX = 0;
+		}
+		else if(Input.GetAxis("Vertical") > 0)
+		{
+			offsetY = 1;
+			offsetX = 0;
+		}
+
 
 		if (IsAttacking () == false) 
 		{
-			GameObject _obj = (GameObject)Instantiate (p_attack, transform.position, transform.rotation); //Instatiate AttackBox Object
+			GameObject _obj = (GameObject)Instantiate (p_attack, transform.position, new Quaternion(0, 0, offsetY, 1) ); //Instatiate AttackBox Object
 			_obj.transform.SetParent(transform);
-			_obj.GetComponent<AttackBox> ().SetAttack (0.5f, 1.0f, 1, Team.PLAYER);
+			_obj.GetComponent<AttackBox> ().SetAttack (0.5f, 1.0f, 1, Team.PLAYER, this.gameObject);
 
 			Vector3 _pos = new Vector3(transform.position.x + (offsetX * (float)m_facing), transform.position.y + offsetY, transform.position.z);
 			_obj.transform.position = _pos;
@@ -274,6 +326,12 @@ public class Player : Entity
 			}
 			case State.DEATH:
 			{
+				if(pickUp != null)
+				{
+					pickUp.transform.parent = null;
+					pickUp = null;
+				}
+				
 				_sprite.enabled = false;
 				_particle.emissionRate = 15;
 				_box.enabled = false;

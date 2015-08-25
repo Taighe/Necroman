@@ -6,10 +6,13 @@ namespace nFOLLOWCAMERA
 {
 	public class FollowCamera : MonoBehaviour 
 	{
+		public static FollowCamera control;
+
 		public GameObject followObject;
 
 		public float followSpeed = 1.0f;
 		public float offsetX = 0.0f;
+		public float offsetY = 0.0f;
 		public GameObject cameraBounds;
 		public int layerZ;
 
@@ -18,6 +21,12 @@ namespace nFOLLOWCAMERA
 
 		float startTime;
 		float endTime;
+
+		void Awake()
+		{
+			if (control == null)
+				control = this;
+		}
 
 		// Use this for initialization
 		void Start () 
@@ -78,7 +87,7 @@ namespace nFOLLOWCAMERA
 		{		
 			point1 = origin;
 
-			dest = new Vector3 (dest.x + offsetX * (float)followObject.GetComponent<Entity> ().m_facing, dest.y, dest.z);
+			dest = new Vector3 (dest.x + offsetX, dest.y + offsetY, dest.z);
 			point2 = dest;
 
 		}
