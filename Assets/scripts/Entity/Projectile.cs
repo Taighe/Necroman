@@ -29,7 +29,8 @@ public class Projectile : Entity
 		m_facing = (Facing)facing;
 		m_speed = speed;
 		m_owner = owner;
-	}
+
+	} 
 
 	// Update is called once per frame
 	void Update () 

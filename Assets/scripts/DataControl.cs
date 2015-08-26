@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using nLEVELDATA;
+using System;
+using System.Runtime.Serialization;
+using System.IO;
 
 namespace nDATACONTROL
 {

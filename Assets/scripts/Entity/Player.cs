@@ -6,6 +6,17 @@ using nATTACK;
 using nSCENE;
 using nFOLLOWCAMERA;
 
+enum AnimationState
+{
+	IDLE = 0,
+	RUN,
+	JUMP,
+	FALL,
+	ATTACK,
+	ATTACK_UP,
+	ATTACK_DOWN
+}
+
 public class Player : Entity 
 {
 	//prefabs
@@ -35,6 +46,9 @@ public class Player : Entity
 	
 	float m_time;
 	float m_deathTimer;
+
+	AnimationState m_animState;
+	Animator m_animator;
 
 	Vector2 m_velocity;
 	
@@ -75,17 +89,19 @@ public class Player : Entity
 
 	void Start()
 	{
+		m_animator = GetComponent<Animator> ();
 		m_remnants = new ArrayList ();
-		
+		m_animState = AnimationState.IDLE;
 		m_attack = null;
 		checkPoint = new Vector2(transform.position.x, transform.position.y);
 		SetState (State.ALIVE, ref m_state);
 	}
 
 	// Update is called once per frame
-	void 
-		Update () 
+	void Update () 
 	{
+		Entity _entity = GetComponent<Entity> ();
+		_entity.Update ();
 		//If game is paused don't update object
 		if (IsPaused() )
 			return;
@@ -100,7 +116,11 @@ public class Player : Entity
 				
 				Controls ();
 				
+				ChangeInFacing();
+
 				m_rigid2D.velocity = m_velocity; 
+
+				AnimationControl();
 				break;
 			}
 			case State.DEATH:
@@ -206,11 +226,6 @@ public class Player : Entity
 		{
 			m_velocity.x = 0;
 			FollowCamera.control.offsetY = Input.GetAxis ("Vertical") * 4;
-		}
-
-		if (Input.GetAxis ("Horizontal") > 0.2 && Input.GetAxis ("Horizontal") < -0.2) 
-		{
-			FollowCamera.control.offsetX = Input.GetAxis ("Horizontal") * 4;
 		}
 
 	}
@@ -344,5 +359,20 @@ public class Player : Entity
 		return false;
 	}
 	
+	void AnimationControl()
+	{
+		if (IsOnGround ())
+		{
+			m_animState = AnimationState.IDLE;
+			m_animator.speed = 1.0f;
+		}
 
+		if (m_velocity.x != 0 && IsOnGround()) 
+		{
+			m_animState = AnimationState.RUN;
+		}
+
+
+		m_animator.SetInteger ("State", (int)m_animState);
+	}
 }

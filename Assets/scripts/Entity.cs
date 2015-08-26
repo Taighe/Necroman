@@ -39,7 +39,11 @@ namespace nENTITY
 
 		protected bool IsINTERACTABLE;
 
-		public void OnCollisionStay2D(Collision2D collision)
+		Facing m_lastFacing; 
+
+		float m_scaleX;
+
+		public virtual void OnCollisionStay2D(Collision2D collision)
 		{
 			Vector2 norms = collision.contacts[0].normal;
 
@@ -60,6 +64,11 @@ namespace nENTITY
 		public virtual void Awake()
 		{
 			m_rigid2D = GetComponent<Rigidbody2D> ();
+			m_scaleX = transform.localScale.x;
+
+			Vector3 scale = transform.localScale;
+			scale.x = m_scaleX * (float)m_facing ;
+			transform.localScale = scale;
 		}
 
 		public bool IsOnGround()
@@ -83,9 +92,19 @@ namespace nENTITY
 			return false;
 		}
 
-		void Update()
+		public void Update()
 		{
+			m_lastFacing = m_facing;
+		}
 
+		public void ChangeInFacing()
+		{
+			if(m_facing != m_lastFacing)
+			{
+				Vector3 scale = transform.localScale;
+				scale.x = m_scaleX * (int)m_facing;
+				transform.localScale = scale;
+			}
 		}
 
 		public virtual void Damaged(int damage)

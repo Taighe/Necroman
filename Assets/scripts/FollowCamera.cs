@@ -87,7 +87,7 @@ namespace nFOLLOWCAMERA
 		{		
 			point1 = origin;
 
-			dest = new Vector3 (dest.x + offsetX, dest.y + offsetY, dest.z);
+			dest = new Vector3 (dest.x + offsetX * (float)followObject.GetComponent<Entity>().m_facing, dest.y + offsetY, dest.z);
 			point2 = dest;
 
 		}

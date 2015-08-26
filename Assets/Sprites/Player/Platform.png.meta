@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: 0f118ecd17ea80a49a91a202f40fea9f
-timeCreated: 1439944176
-licenseType: Pro
+timeCreated: 1440562509
+licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
     21300000: Platform_0
@@ -47,7 +47,7 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: .5, y: .5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 32
   alphaIsTransparency: 1
   textureType: 8
   buildTargetSettings: []
@@ -60,8 +60,8 @@ TextureImporter:
         y: 32
         width: 32
         height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 9
+      pivot: {x: .5, y: .419999987}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Platform_1
       rect:
@@ -71,7 +71,7 @@ TextureImporter:
         width: 32
         height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Platform_2
       rect:
@@ -81,7 +81,7 @@ TextureImporter:
         width: 32
         height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Platform_3
       rect:
@@ -91,7 +91,7 @@ TextureImporter:
         width: 32
         height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
   spritePackingTag: 
   userData: 
