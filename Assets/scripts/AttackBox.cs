@@ -38,7 +38,7 @@ namespace nATTACK
 
 			}
 
-			if (collision.gameObject.tag != "Terrain") 
+			if (collision.gameObject.tag != "Terrain" && collision.gameObject.tag != "Static") 
 			{
 				GameObject _obj = collision.gameObject;
 				GameObject _owner = m_owner;

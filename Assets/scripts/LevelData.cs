@@ -9,6 +9,8 @@ namespace nLEVELDATA
 	{
 		public float highScore;
 		public bool unlocked;
+		public bool soulFragment;
+		public bool medal;
 
 		// Use this for initialization
 		void Awake () 
@@ -19,6 +21,7 @@ namespace nLEVELDATA
 		// Update is called once per frame
 		void Update () 
 		{
+
 		}
 
 	}

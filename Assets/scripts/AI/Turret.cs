@@ -7,6 +7,7 @@ public class Turret : Entity
 {
 	public GameObject projectile;
 	public float delay;
+	public float speed;
 
 	float m_timer;
 
@@ -25,7 +26,7 @@ public class Turret : Entity
 		if(CanFire() )
 		{
 			GameObject _obj = (GameObject)Instantiate(projectile, transform.position, transform.rotation);
-			_obj.GetComponent<Projectile>().SetProjectile(5.0f, (int)m_facing, this.gameObject);
+			_obj.GetComponent<Projectile>().SetProjectile(speed, (int)m_facing, this.gameObject);
 		}
 	}
 

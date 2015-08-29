@@ -11,15 +11,18 @@ namespace nSCENE
 		static float s_levelTime;
 
 		public string dataLink;
+		//public GameObject player;
+
 		LevelData data;
 
 		void Awake()
 		{
 			s_levelTime = levelTime;
-			if (dataLink == "")
+			if (GameObject.Find (dataLink) == null)
 				return;
 
 			data = GameObject.Find (dataLink).GetComponent<LevelData> ();
+
 			data.unlocked = true;
 			DataControl.levelData = data;
 		}
@@ -27,14 +30,9 @@ namespace nSCENE
 		// Update is called once per frame
 		void Update () 
 		{
-			if(Input.GetButtonDown("Submit"))
+			if (Input.GetButtonDown ("Submit") && Scene.paused == false) 
 			{
-				Scene.paused = !Scene.paused;
-			}
-
-			if(Input.GetButtonDown("Cancel"))
-			{
-				Application.LoadLevel("levelSelectMenu_wip00");
+				Scene.paused = true;
 			}
 
 			if (Scene.paused)
@@ -56,6 +54,18 @@ namespace nSCENE
 		{
 			return s_levelTime;
 		}
+
+		public void Resume()
+		{
+			Scene.paused = false;
+		}
+		
+		public void Quit()
+		{
+			Scene.paused = false;
+			Application.LoadLevel("levelSelectMenu_wip00");
+		}
 	}
-	
+
+
 }

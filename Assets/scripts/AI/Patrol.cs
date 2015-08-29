@@ -61,19 +61,16 @@ public class Patrol : MonoBehaviour
 		}
 	}
 
-	bool switchTarget()
+	void switchTarget()
 	{
 		if (target == pointA) 
 		{
 			target = pointB;
-			return true;
 		}
 		else 
 		{
 			target = pointA;
-			return true;
 		}
 
-		return false;
 	}
 }

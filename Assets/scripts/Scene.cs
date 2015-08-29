@@ -4,6 +4,5 @@
 	{
 		public static bool paused = false;
 
-
 	}
 }

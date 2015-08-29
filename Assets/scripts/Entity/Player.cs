@@ -28,7 +28,8 @@ public class Player : Entity
 	public float speed;
 	public float minJump;
 	public float maxJump;
-	
+	public float remnantSpawnOffsetY;
+
 	public float recoverTime;
 	
 	GameObject interactable;
@@ -55,6 +56,8 @@ public class Player : Entity
 	ArrayList m_remnants;
 	
 	GameObject m_attack;
+
+	Collision2D m_collision;
 	
 	//Collisions
 	void OnTriggerEnter2D(Collider2D collision)
@@ -74,6 +77,9 @@ public class Player : Entity
 		{
 			interactable = collision.gameObject;
 		}
+
+		m_collision = collision;
+		print (m_collision);
 	}
 
 	void OnCollisionExit2D(Collision2D collision)
@@ -102,6 +108,7 @@ public class Player : Entity
 	{
 		Entity _entity = GetComponent<Entity> ();
 		_entity.Update ();
+
 		//If game is paused don't update object
 		if (IsPaused() )
 			return;
@@ -121,6 +128,7 @@ public class Player : Entity
 				m_rigid2D.velocity = m_velocity; 
 
 				AnimationControl();
+
 				break;
 			}
 			case State.DEATH:
@@ -197,10 +205,14 @@ public class Player : Entity
 			GameScene.AddLevelTime(15.0f);
 		}
 
-		//Jumping
-		if (Input.GetButton ("Jump") && IsOnGround() )
+		//Jump
+		if (Input.GetButton ("Jump") && IsOnGround() && !(Input.GetAxis ("Vertical") < 0))
 		{
 			Jump ();
+		}
+		else if (Input.GetButton ("Jump") && IsOnGround() && Input.GetAxis ("Vertical") < 0 && m_collision.gameObject.tag == "Remnant")//Drop
+		{
+			Drop ();
 		}
 
 		if (Input.GetButton ("Jump") == true && JUMPINITIATED == true && JUMPKEYRELEASED == false)
@@ -213,7 +225,6 @@ public class Player : Entity
 			JUMPKEYRELEASED = true;
 			JUMPINITIATED = false;
 		}
-
 
 		//Movement
 		m_velocity.x = Input.GetAxis ("Horizontal") * speed;
@@ -292,6 +303,15 @@ public class Player : Entity
 		}
 	}
 
+	void Drop()
+	{
+		if(m_collision.gameObject.tag == "Remnant")
+		{
+			EdgeCollider2D _collider = m_collision.gameObject.GetComponent<EdgeCollider2D>();
+			_collider.enabled = false;
+		}
+	}
+
 	public override void Damaged(int damage)
 	{
 		Die ();
@@ -304,7 +324,11 @@ public class Player : Entity
 
 		for(int i = 0; i < m_remnants.Count; i++)
 		{
-			if(m_remnants[i] == null)m_remnants.RemoveAt(i);
+			if((GameObject)m_remnants[i] == null)
+			{
+				m_remnants.RemoveAt(i);
+			}
+
 		}
 	
 		if(m_remnants.Count >= maxRemnants)
@@ -313,7 +337,9 @@ public class Player : Entity
 			m_remnants.RemoveAt(0);
 		}
 
-		GameObject _obj = (GameObject)Instantiate(p_remnant, transform.position, transform.rotation);
+		Vector3 remPos = transform.position;
+		remPos.y += remnantSpawnOffsetY;
+		GameObject _obj = (GameObject)Instantiate(p_remnant, remPos, transform.rotation);
 		m_remnants.Add (_obj.gameObject);
 
 		Vector3 _pos = new Vector3(checkPoint.x, checkPoint.y, 0);

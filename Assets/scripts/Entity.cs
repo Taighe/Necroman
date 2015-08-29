@@ -38,19 +38,27 @@ namespace nENTITY
 		public Team m_team;
 
 		protected bool IsINTERACTABLE;
+		public bool IsPLATFORM;
 
 		Facing m_lastFacing; 
 
 		float m_scaleX;
 
-		public virtual void OnCollisionStay2D(Collision2D collision)
+		public void OnCollisionStay2D(Collision2D collision)
 		{
+
 			Vector2 norms = collision.contacts[0].normal;
 
 			m_collisionNormals += norms;
 
 			m_collisionNormals.x = Mathf.Clamp (m_collisionNormals.x, -1.0f, 1.0f);
 			m_collisionNormals.y = Mathf.Clamp (m_collisionNormals.y, -1.0f, 1.0f);
+
+		}
+
+		public void OnCollisionEnter2D(Collision2D collision)
+		{
+
 		}
 
 		public void OnCollisionExit2D(Collision2D collision)
@@ -58,6 +66,17 @@ namespace nENTITY
 			Vector2 norms = new Vector2();
 
 			m_collisionNormals = norms;
+
+
+		}
+
+		public void OnTriggerExit2D(Collider2D collision)
+		{
+			if (IsPLATFORM) 
+			{
+				EdgeCollider2D _collider = gameObject.GetComponent<EdgeCollider2D>();
+				_collider.enabled = true;
+			}
 		}
 
 		// Use this for initialization
@@ -73,7 +92,7 @@ namespace nENTITY
 
 		public bool IsOnGround()
 		{
-			if(m_collisionNormals.y > 0)
+			if(m_collisionNormals.y > 0 && m_rigid2D.velocity.y == 0)
 			{
 				return true;
 			}
