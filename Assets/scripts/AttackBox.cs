@@ -38,10 +38,11 @@ namespace nATTACK
 
 			}
 
-			if (collision.gameObject.tag != "Terrain" && collision.gameObject.tag != "Static") 
+			if (collision.gameObject.tag != "Terrain") 
 			{
 				GameObject _obj = collision.gameObject;
 				GameObject _owner = m_owner;
+				Player _player = m_owner.GetComponent<Player>();
 
 				if(_obj.GetComponent<Entity>().m_team != m_team)
 				{
@@ -51,7 +52,10 @@ namespace nATTACK
 
 					if(_axis.z < 0)
 					{
-						m_owner.GetComponent<Player>().Hop ();
+						float boost = _player.minJump;
+						if(collision.gameObject.tag == "Remnant") boost = _player.boostJump;
+
+						_player.Hop (boost);
 					}
 
 					_obj.GetComponent<Entity>().Damaged(m_damage);

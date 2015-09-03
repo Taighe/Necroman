@@ -9,7 +9,7 @@ public class Collectable : MonoBehaviour
 	{
 		if(collision.gameObject.tag == "Player")
 		{
-			DataControl.levelData.soulFragment = true;
+			DataControl.levelData.soulFragment += 1;
 			Destroy (this.gameObject);
 		}
 	}

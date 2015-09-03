@@ -39,7 +39,7 @@ namespace nSCENE
 				return;
 
 			levelTime = s_levelTime;
-			levelTime += 1.0f * Time.deltaTime;
+			levelTime += 0.5f * Time.smoothDeltaTime;
 
 			s_levelTime = levelTime;
 

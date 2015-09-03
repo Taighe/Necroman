@@ -14,7 +14,7 @@ public class Enemy : Entity
 	// Use this for initialization
 	void Start () 
 	{
-
+		SetState (m_state, ref m_state);
 	}
 
 	void OnCollisionEnter2D(Collision2D collision)
@@ -51,8 +51,6 @@ public class Enemy : Entity
 		{
 			case State.ALIVE:
 			{
-				MeshRenderer _mesh = GetComponent<MeshRenderer>();
-				_mesh.enabled = true;
 				BoxCollider2D _box = GetComponent<BoxCollider2D>();
 				_box.enabled = true;
 				m_rigid2D.isKinematic = true;
@@ -61,7 +59,7 @@ public class Enemy : Entity
 			}
 			case State.DEATH:
 			{
-
+				gameObject.layer = 10;
 				m_rigid2D.isKinematic = false;
 				address = state;
 				return true;

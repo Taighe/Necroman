@@ -9,7 +9,7 @@ namespace nLEVELDATA
 	{
 		public float highScore;
 		public bool unlocked;
-		public bool soulFragment;
+		public int soulFragment;
 		public bool medal;
 
 		// Use this for initialization

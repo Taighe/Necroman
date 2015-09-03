@@ -26,7 +26,6 @@ namespace nENTITY
 
 	public class Entity : MonoBehaviour 
 	{
-		public Color _color;
 		public Facing m_facing;
 
 		protected Rigidbody2D m_rigid2D;
@@ -36,6 +35,7 @@ namespace nENTITY
 		public State m_state;
 
 		public Team m_team;
+		public float maxFallSpeed;
 
 		protected bool IsINTERACTABLE;
 		public bool IsPLATFORM;
@@ -46,8 +46,14 @@ namespace nENTITY
 
 		public void OnCollisionStay2D(Collision2D collision)
 		{
-
+			Entity _entity = collision.gameObject.GetComponent<Entity> ();
+			
 			Vector2 norms = collision.contacts[0].normal;
+
+			if (_entity != null && _entity.IsPLATFORM && norms.y < 0) 
+			{
+				return;
+			}
 
 			m_collisionNormals += norms;
 
@@ -63,9 +69,8 @@ namespace nENTITY
 
 		public void OnCollisionExit2D(Collision2D collision)
 		{
-			Vector2 norms = new Vector2();
 
-			m_collisionNormals = norms;
+			m_collisionNormals = Vector2.zero;
 
 
 		}
@@ -74,7 +79,7 @@ namespace nENTITY
 		{
 			if (IsPLATFORM) 
 			{
-				EdgeCollider2D _collider = gameObject.GetComponent<EdgeCollider2D>();
+				BoxCollider2D _collider = gameObject.GetComponent<BoxCollider2D>();
 				_collider.enabled = true;
 			}
 		}
@@ -92,7 +97,7 @@ namespace nENTITY
 
 		public bool IsOnGround()
 		{
-			if(m_collisionNormals.y > 0 && m_rigid2D.velocity.y == 0)
+			if(m_collisionNormals.y > 0)
 			{
 				return true;
 			}
@@ -114,6 +119,14 @@ namespace nENTITY
 		public void Update()
 		{
 			m_lastFacing = m_facing;
+
+			Vector2 vel = m_rigid2D.velocity;
+			if (m_rigid2D.velocity.y < maxFallSpeed) 
+			{
+				vel.y = maxFallSpeed;
+			}
+			
+			m_rigid2D.velocity = vel;
 		}
 
 		public void ChangeInFacing()
@@ -128,7 +141,7 @@ namespace nENTITY
 
 		public virtual void Damaged(int damage)
 		{
-
+			Die ();
 		}
 
 		public virtual void Die()

@@ -6,7 +6,7 @@ using nATTACK;
 using nSCENE;
 using nFOLLOWCAMERA;
 
-enum AnimationState
+public enum AnimationState
 {
 	IDLE = 0,
 	RUN,
@@ -23,21 +23,22 @@ public class Player : Entity
 	public GameObject p_remnant;
 	public GameObject p_attack;
 	public GameObject p_deathEffect;
-	//
 
+	public int maxRemnants;
+	public int startAnim;
 	public float speed;
 	public float minJump;
 	public float maxJump;
 	public float remnantSpawnOffsetY;
 
 	public float recoverTime;
-	
+	public float boostJump;
+	public float peekOffsetY;
+
 	GameObject interactable;
 	GameObject pickUp;
 
 	float jumpForce;
-
-	public int maxRemnants;
 
 	Vector2 checkPoint;
 
@@ -79,7 +80,6 @@ public class Player : Entity
 		}
 
 		m_collision = collision;
-		print (m_collision);
 	}
 
 	void OnCollisionExit2D(Collision2D collision)
@@ -96,6 +96,8 @@ public class Player : Entity
 	void Start()
 	{
 		m_animator = GetComponent<Animator> ();
+
+		//m_animator.SetInteger ("state", startAnim);
 		m_remnants = new ArrayList ();
 		m_animState = AnimationState.IDLE;
 		m_attack = null;
@@ -146,6 +148,7 @@ public class Player : Entity
 
 				break;
 			}
+
 		}
 	}
 
@@ -197,20 +200,17 @@ public class Player : Entity
 
 		if(Input.GetButtonDown("Reset"))
 		{
-			for(int i = 0; i < m_remnants.Count; i++)
-			{
-				Destroy( (GameObject)m_remnants[i]);
-			}
-
-			GameScene.AddLevelTime(15.0f);
+			ResetRemenants();
 		}
 
 		//Jump
-		if (Input.GetButton ("Jump") && IsOnGround() && !(Input.GetAxis ("Vertical") < 0))
+		bool _ground = IsOnGround ();
+
+		if (Input.GetButtonDown ("Jump") && _ground && !(Input.GetAxis ("Vertical") < 0))
 		{
 			Jump ();
 		}
-		else if (Input.GetButton ("Jump") && IsOnGround() && Input.GetAxis ("Vertical") < 0 && m_collision.gameObject.tag == "Remnant")//Drop
+		else if (Input.GetButton ("Jump") && _ground && Input.GetAxis ("Vertical") < 0 && m_collision.gameObject.tag == "Remnant")//Drop
 		{
 			Drop ();
 		}
@@ -233,23 +233,23 @@ public class Player : Entity
 		if(Input.GetAxis ("Horizontal") > 0) m_facing = Facing.RIGHT;
 
 		//Camera actions
-		if(Input.GetButton("Peek"))
-		{
-			m_velocity.x = 0;
-			FollowCamera.control.offsetY = Input.GetAxis ("Vertical") * 4;
-		}
+		FollowCamera.control.offsetY = Input.GetAxis ("Vertical") * peekOffsetY;
+
 
 	}
 
-	public void Hop()
+	public void Hop(float boost)
 	{
-		m_velocity.y = maxJump;
+		m_velocity.y = boost;
 		m_rigid2D.velocity = m_velocity;
 	}
 	
 	void ResetRemenants()
 	{
-
+		for(int i = 0; i < m_remnants.Count; i++)
+		{
+			Destroy( (GameObject)m_remnants[i]);
+		}
 	}
 
 	bool IsAttacking()
@@ -307,7 +307,7 @@ public class Player : Entity
 	{
 		if(m_collision.gameObject.tag == "Remnant")
 		{
-			EdgeCollider2D _collider = m_collision.gameObject.GetComponent<EdgeCollider2D>();
+			BoxCollider2D _collider = m_collision.gameObject.GetComponent<BoxCollider2D>();
 			_collider.enabled = false;
 		}
 	}
@@ -339,8 +339,12 @@ public class Player : Entity
 
 		Vector3 remPos = transform.position;
 		remPos.y += remnantSpawnOffsetY;
-		GameObject _obj = (GameObject)Instantiate(p_remnant, remPos, transform.rotation);
-		m_remnants.Add (_obj.gameObject);
+
+		if(m_collision.gameObject.tag != "Cursed")
+		{
+			GameObject _obj = (GameObject)Instantiate(p_remnant, remPos, transform.rotation);
+			m_remnants.Add (_obj.gameObject);
+		}
 
 		Vector3 _pos = new Vector3(checkPoint.x, checkPoint.y, 0);
 
@@ -373,9 +377,12 @@ public class Player : Entity
 					pickUp = null;
 				}
 				
-				_sprite.enabled = false;
+				if(m_attack != null)Destroy(m_attack.gameObject);
+				
 				_particle.emissionRate = 15;
 				_box.enabled = false;
+				Vector2 vel = Vector2.zero;
+				m_rigid2D.velocity = vel;
 				m_rigid2D.isKinematic = true;
 				address = state;
 				return true; 
