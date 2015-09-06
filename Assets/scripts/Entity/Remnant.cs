@@ -6,8 +6,6 @@ namespace nREMNANT
 {
 	public class Remnant : Entity 
 	{ 
-
-
 		BoxCollider2D m_collider;
 
 		void OnTriggerStay2D(Collider2D collision)
@@ -22,12 +20,6 @@ namespace nREMNANT
 		void Start () 
 		{
 			m_collider = GetComponent<BoxCollider2D> ();
-		}
-
-		// Update is called once per frame
-		void Update () 
-		{
-
 		}
 
 		public override void Die()

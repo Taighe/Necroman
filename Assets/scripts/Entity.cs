@@ -27,11 +27,6 @@ namespace nENTITY
 	public class Entity : MonoBehaviour 
 	{
 		public Facing m_facing;
-
-		protected Rigidbody2D m_rigid2D;
-
-		protected Vector2 m_collisionNormals;
-
 		public State m_state;
 
 		public Team m_team;
@@ -40,9 +35,16 @@ namespace nENTITY
 		protected bool IsINTERACTABLE;
 		public bool IsPLATFORM;
 
+		protected Rigidbody2D m_rigid2D;
+		
+		protected Vector2 m_collisionNormals;
+		protected Vector2 m_velocity;
+
 		Facing m_lastFacing; 
 
 		float m_scaleX;
+
+
 
 		public void OnCollisionStay2D(Collision2D collision)
 		{
@@ -109,24 +111,32 @@ namespace nENTITY
 		{
 			if (Scene.paused == true) 
 			{
-				m_rigid2D.Sleep ();
+				m_rigid2D.Sleep();
 				return true;
 			}
-			m_rigid2D.WakeUp ();
+
+			m_rigid2D.WakeUp();
 			return false;
 		}
 
 		public void Update()
 		{
+			if(m_rigid2D == null) return;
+
 			m_lastFacing = m_facing;
 
-			Vector2 vel = m_rigid2D.velocity;
-			if (m_rigid2D.velocity.y < maxFallSpeed) 
-			{
-				vel.y = maxFallSpeed;
-			}
+			m_velocity.x = m_rigid2D.velocity.x;
+			if(IsPaused() == false)
+				m_velocity.y = m_rigid2D.velocity.y;
 			
-			m_rigid2D.velocity = vel;
+			Vector2 vel = m_rigid2D.velocity;
+			if (m_velocity.y < maxFallSpeed) 
+			{
+				m_velocity.y = maxFallSpeed;
+			}
+
+			m_rigid2D.velocity = m_velocity;
+			print (m_rigid2D.velocity);
 		}
 
 		public void ChangeInFacing()

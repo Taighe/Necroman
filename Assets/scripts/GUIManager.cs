@@ -26,7 +26,7 @@ public class GUIManager : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		guiElements[0].text = "Time " + scene.GetComponent<GameScene>().levelTime / 60;
+		//guiElements[0].text = "Time " + scene.GetComponent<GameScene>().levelTime / 60;
 		//guiElements[1].enabled = Scene.paused;
 		m_pauseMenu.SetActive(Scene.paused);
 		//m_lives.fillAmount = 

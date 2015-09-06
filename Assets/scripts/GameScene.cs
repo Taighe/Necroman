@@ -9,14 +9,21 @@ namespace nSCENE
 	{
 		public float levelTime;
 		static float s_levelTime;
+		public static GameScene gameScene;
+
+		public GameObject player;
 
 		public string dataLink;
-		//public GameObject player;
 
 		LevelData data;
 
 		void Awake()
 		{
+			if(gameScene == null)
+			{
+				gameScene = this;
+			}
+
 			s_levelTime = levelTime;
 			if (GameObject.Find (dataLink) == null)
 				return;
@@ -30,11 +37,6 @@ namespace nSCENE
 		// Update is called once per frame
 		void Update () 
 		{
-			if (Input.GetButtonDown ("Submit") && Scene.paused == false) 
-			{
-				Scene.paused = true;
-			}
-
 			if (Scene.paused)
 				return;
 
@@ -58,6 +60,7 @@ namespace nSCENE
 		public void Resume()
 		{
 			Scene.paused = false;
+
 		}
 		
 		public void Quit()

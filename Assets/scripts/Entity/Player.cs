@@ -8,7 +8,9 @@ using nFOLLOWCAMERA;
 
 public enum AnimationState
 {
-	IDLE = 0,
+	PRE_INTRO = -2,
+	INTRO,
+	IDLE,
 	RUN,
 	JUMP,
 	FALL,
@@ -23,6 +25,7 @@ public class Player : Entity
 	public GameObject p_remnant;
 	public GameObject p_attack;
 	public GameObject p_deathEffect;
+	public bool disableControl;
 
 	public int maxRemnants;
 	public int startAnim;
@@ -30,13 +33,15 @@ public class Player : Entity
 	public float minJump;
 	public float maxJump;
 	public float remnantSpawnOffsetY;
-
+	
 	public float recoverTime;
 	public float boostJump;
 	public float peekOffsetY;
 
 	GameObject interactable;
 	GameObject pickUp;
+
+	Rect m_respawnArea;
 
 	float jumpForce;
 
@@ -52,8 +57,6 @@ public class Player : Entity
 	AnimationState m_animState;
 	Animator m_animator;
 
-	Vector2 m_velocity;
-	
 	ArrayList m_remnants;
 	
 	GameObject m_attack;
@@ -97,7 +100,9 @@ public class Player : Entity
 	{
 		m_animator = GetComponent<Animator> ();
 
-		//m_animator.SetInteger ("state", startAnim);
+		m_animator.SetInteger ("State", startAnim);
+
+		m_respawnArea = new Rect (transform.position, new Vector2(3.0f, 3.0f) );
 		m_remnants = new ArrayList ();
 		m_animState = AnimationState.IDLE;
 		m_attack = null;
@@ -106,7 +111,7 @@ public class Player : Entity
 	}
 
 	// Update is called once per frame
-	void Update () 
+	void Update() 
 	{
 		Entity _entity = GetComponent<Entity> ();
 		_entity.Update ();
@@ -120,19 +125,19 @@ public class Player : Entity
 		{
 			case State.ALIVE:
 			{
-				m_velocity.x = m_rigid2D.velocity.x;
-				m_velocity.y = m_rigid2D.velocity.y;
-				
-				Controls ();
+				if(disableControl == false) 
+				{
+					Controls ();
+					AnimationControl();
+				}
 				
 				ChangeInFacing();
 
 				m_rigid2D.velocity = m_velocity; 
 
-				AnimationControl();
-
 				break;
 			}
+
 			case State.DEATH:
 			{
 				Vector2 _pos = new Vector2(transform.position.x, transform.position.y);	
@@ -174,9 +179,15 @@ public class Player : Entity
 		jumpForce = minJump + m_time * (maxJump - minJump);
 		m_velocity.y = jumpForce;
 	}
-	
+
 	void Controls()
 	{
+		if (Input.GetButtonDown ("Submit") && Scene.paused == false) 
+		{
+			Scene.paused = true;
+			return;
+		}
+
 		if(Input.GetButton("Interact"))
 		{
 			if(pickUp == null)
@@ -233,8 +244,7 @@ public class Player : Entity
 		if(Input.GetAxis ("Horizontal") > 0) m_facing = Facing.RIGHT;
 
 		//Camera actions
-		FollowCamera.control.offsetY = Input.GetAxis ("Vertical") * peekOffsetY;
-
+		if(IsOnGround() ) FollowCamera.control.offsetY = Input.GetAxis ("Vertical") * peekOffsetY;
 
 	}
 
@@ -248,7 +258,7 @@ public class Player : Entity
 	{
 		for(int i = 0; i < m_remnants.Count; i++)
 		{
-			Destroy( (GameObject)m_remnants[i]);
+			Destroy( (GameObject)m_remnants[i] );
 		}
 	}
 
@@ -328,7 +338,6 @@ public class Player : Entity
 			{
 				m_remnants.RemoveAt(i);
 			}
-
 		}
 	
 		if(m_remnants.Count >= maxRemnants)
@@ -377,7 +386,7 @@ public class Player : Entity
 					pickUp = null;
 				}
 				
-				if(m_attack != null)Destroy(m_attack.gameObject);
+				if(m_attack != null) Destroy(m_attack.gameObject);
 				
 				_particle.emissionRate = 15;
 				_box.enabled = false;
@@ -391,7 +400,12 @@ public class Player : Entity
 
 		return false;
 	}
-	
+
+	public void Intro()
+	{
+		Hop(15);
+	}
+
 	void AnimationControl()
 	{
 		if (IsOnGround ())
@@ -407,5 +421,15 @@ public class Player : Entity
 
 
 		m_animator.SetInteger ("State", (int)m_animState);
+	}
+
+	public bool RespawnSignal()
+	{
+		if (Input.GetButtonDown ("Reset")) 
+		{
+			return true;
+		} 
+
+		return false;
 	}
 }

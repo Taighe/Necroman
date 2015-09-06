@@ -19,7 +19,7 @@ public class Patrol : MonoBehaviour
 	}
 	
 	// Update is called once per frame
-	void Update () 
+	void FixedUpdate () 
 	{
 		if (Scene.paused == true)
 			return;

@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+using nSCENE;
+
 public class Rotator : MonoBehaviour 
 {
 	public float speed;
@@ -14,6 +16,9 @@ public class Rotator : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
+		if (Scene.paused)
+			return;
+
 		float angle;
 		Vector3 axis;
 

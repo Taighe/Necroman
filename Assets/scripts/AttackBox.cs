@@ -42,7 +42,8 @@ namespace nATTACK
 			{
 				GameObject _obj = collision.gameObject;
 				GameObject _owner = m_owner;
-				Player _player = m_owner.GetComponent<Player>();
+
+				Player _player = m_owner.GetComponent<Player>();;
 
 				if(_obj.GetComponent<Entity>().m_team != m_team)
 				{
@@ -50,7 +51,7 @@ namespace nATTACK
 					Vector3 _axis = Vector3.zero;
 					transform.rotation.ToAngleAxis(out degrees, out _axis);
 
-					if(_axis.z < 0)
+					if(_axis.z < 0 && _player != null)
 					{
 						float boost = _player.minJump;
 						if(collision.gameObject.tag == "Remnant") boost = _player.boostJump;

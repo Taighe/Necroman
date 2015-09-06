@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿
+using UnityEngine;
 using System.Collections;
 
 public class TitleManager : MonoBehaviour 
@@ -14,6 +15,8 @@ public class TitleManager : MonoBehaviour
 	public void NewGame()
 	{
 		if(m_anim != null) m_anim.SetBool ("Start", true);
+
+		gameObject.SetActive (false);
 	}
 
 	public void Continue()
