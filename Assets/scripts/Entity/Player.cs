@@ -38,6 +38,8 @@ public class Player : Entity
 	public float boostJump;
 	public float peekOffsetY;
 
+	public int m_remnantCount;
+
 	GameObject interactable;
 	GameObject pickUp;
 
@@ -61,8 +63,6 @@ public class Player : Entity
 	
 	GameObject m_attack;
 
-	Collision2D m_collision;
-	
 	//Collisions
 	void OnTriggerEnter2D(Collider2D collision)
 	{
@@ -70,6 +70,7 @@ public class Player : Entity
 		{
 			checkPoint = new Vector2(collision.transform.position.x, collision.transform.position.y);
 		}
+
 	}
 
 	void OnCollisionStay2D(Collision2D collision)
@@ -81,8 +82,6 @@ public class Player : Entity
 		{
 			interactable = collision.gameObject;
 		}
-
-		m_collision = collision;
 	}
 
 	void OnCollisionExit2D(Collision2D collision)
@@ -94,6 +93,7 @@ public class Player : Entity
 		{
 			interactable = null;
 		}
+
 	}
 
 	void Start()
@@ -115,6 +115,8 @@ public class Player : Entity
 	{
 		Entity _entity = GetComponent<Entity> ();
 		_entity.Update ();
+
+		m_remnantCount = m_remnants.Count;
 
 		//If game is paused don't update object
 		if (IsPaused() )
@@ -260,6 +262,8 @@ public class Player : Entity
 		{
 			Destroy( (GameObject)m_remnants[i] );
 		}
+
+		m_remnants.Clear ();
 	}
 
 	bool IsAttacking()
@@ -334,22 +338,16 @@ public class Player : Entity
 
 		for(int i = 0; i < m_remnants.Count; i++)
 		{
-			if((GameObject)m_remnants[i] == null)
+			if(m_remnants[i] == null)
 			{
 				m_remnants.RemoveAt(i);
 			}
-		}
-	
-		if(m_remnants.Count >= maxRemnants)
-		{
-			Destroy((GameObject)m_remnants[0]);
-			m_remnants.RemoveAt(0);
 		}
 
 		Vector3 remPos = transform.position;
 		remPos.y += remnantSpawnOffsetY;
 
-		if(m_collision.gameObject.tag != "Cursed")
+		if(m_collision.gameObject.tag != "Cursed" && m_remnants.Count < maxRemnants)
 		{
 			GameObject _obj = (GameObject)Instantiate(p_remnant, remPos, transform.rotation);
 			m_remnants.Add (_obj.gameObject);
@@ -431,5 +429,17 @@ public class Player : Entity
 		} 
 
 		return false;
+	}
+
+	public void ResizeRemnantArray()
+	{
+		for(int i = 0; i < m_remnants.Count; i++)
+		{
+			GameObject _obj = (GameObject)m_remnants[i];
+
+			if(_obj.GetComponent<Entity>().IsDestroyed)
+			m_remnants.RemoveAt(i);
+
+		}
 	}
 }

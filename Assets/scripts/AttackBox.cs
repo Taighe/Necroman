@@ -32,20 +32,29 @@ namespace nATTACK
 				GameObject _obj = collision.gameObject;
 				if(_obj.GetComponent<Entity>().m_team != m_team)
 				{
-					Destroy(_obj);
-					Destroy(this.gameObject);
-				}
+					Destroy((GameObject)_obj);
+					_obj.GetComponent<Entity>().IsDestroyed = true;
 
+					if(m_owner.tag == "Player") 
+					{
+						GameScene.gameScene.player.GetComponent<Player>().ResizeRemnantArray();
+					}
+
+					Destroy(this.gameObject);
+
+				}
 			}
 
 			if (collision.gameObject.tag != "Terrain") 
 			{
-				GameObject _obj = collision.gameObject;
+				Entity _entity = collision.gameObject.GetComponent<Entity>();
+				if(_entity == null) return;
+
 				GameObject _owner = m_owner;
 
 				Player _player = m_owner.GetComponent<Player>();;
 
-				if(_obj.GetComponent<Entity>().m_team != m_team)
+				if(_entity.m_team != m_team)
 				{
 					float degrees;
 					Vector3 _axis = Vector3.zero;
@@ -53,13 +62,12 @@ namespace nATTACK
 
 					if(_axis.z < 0 && _player != null)
 					{
-						float boost = _player.minJump;
-						if(collision.gameObject.tag == "Remnant") boost = _player.boostJump;
+						float boost = _player.boostJump;
 
 						_player.Hop (boost);
 					}
 
-					_obj.GetComponent<Entity>().Damaged(m_damage);
+					_entity.GetComponent<Entity>().Damaged(m_damage);
 					Destroy(this.gameObject);
 				}
 			}

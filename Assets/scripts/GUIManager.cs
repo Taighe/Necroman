@@ -9,18 +9,20 @@ public class GUIManager : MonoBehaviour
 	Text[] guiElements;
 	GameObject m_pauseMenu;
 	Image m_lives;
+	Player m_player;
 
 	void Awake()
 	{
 		guiElements = GetComponentsInChildren<Text> ();
 		m_pauseMenu = transform.GetChild (1).gameObject;
 		m_lives = transform.GetChild (2).GetComponent<Image> ();
+		m_player = GameScene.gameScene.player.GetComponent<Player> ();
 	}
 
 	// Use this for initialization
 	void Start () 
 	{
-	
+
 	}
 	
 	// Update is called once per frame
@@ -29,6 +31,7 @@ public class GUIManager : MonoBehaviour
 		//guiElements[0].text = "Time " + scene.GetComponent<GameScene>().levelTime / 60;
 		//guiElements[1].enabled = Scene.paused;
 		m_pauseMenu.SetActive(Scene.paused);
-		//m_lives.fillAmount = 
+		int currentLives = m_player.maxRemnants - m_player.m_remnantCount;
+		m_lives.fillAmount = (float)currentLives / (float)m_player.maxRemnants; 
 	}
 }

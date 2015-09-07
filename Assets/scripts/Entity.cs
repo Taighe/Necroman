@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-
 using nSCENE;
 
 namespace nENTITY
@@ -32,19 +31,26 @@ namespace nENTITY
 		public Team m_team;
 		public float maxFallSpeed;
 
-		protected bool IsINTERACTABLE;
 		public bool IsPLATFORM;
 
 		protected Rigidbody2D m_rigid2D;
-		
 		protected Vector2 m_collisionNormals;
 		protected Vector2 m_velocity;
+		protected Collision2D m_collision;
+		protected bool IsINTERACTABLE;
+
 
 		Facing m_lastFacing; 
 
 		float m_scaleX;
 
+		bool m_IsDestroyed;
 
+		public bool IsDestroyed
+		{
+			get{return m_IsDestroyed;}
+			set{m_IsDestroyed = value;}
+		}
 
 		public void OnCollisionStay2D(Collision2D collision)
 		{
@@ -66,14 +72,12 @@ namespace nENTITY
 
 		public void OnCollisionEnter2D(Collision2D collision)
 		{
-
+			m_collision = collision;
 		}
 
 		public void OnCollisionExit2D(Collision2D collision)
 		{
-
 			m_collisionNormals = Vector2.zero;
-
 
 		}
 
@@ -136,7 +140,6 @@ namespace nENTITY
 			}
 
 			m_rigid2D.velocity = m_velocity;
-			print (m_rigid2D.velocity);
 		}
 
 		public void ChangeInFacing()
