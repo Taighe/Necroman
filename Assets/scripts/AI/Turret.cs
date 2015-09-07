@@ -9,12 +9,11 @@ public class Turret : Entity
 	public float delay;
 	public float speed;
 
-	float m_timer;
+	public float m_timer;
 
 	// Use this for initialization
 	void Start () 
 	{
-		m_timer = Time.time + delay;
 	}
 	
 	// Update is called once per frame
@@ -22,6 +21,8 @@ public class Turret : Entity
 	{
 		if (Scene.paused == true)
 			return;
+
+		m_timer += 1.0f * Time.deltaTime;
 
 		if(CanFire() )
 		{
@@ -35,9 +36,9 @@ public class Turret : Entity
 		if (projectile == null)
 			return false;
 
-		if(Time.time > m_timer)
+		if(m_timer > delay)
 		{
-			m_timer = Time.time + delay;
+			m_timer = 0;
 			return true;
 		}
 

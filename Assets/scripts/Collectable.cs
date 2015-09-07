@@ -1,16 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
-using nDATACONTROL;
+using nSCENE;
 
 public class Collectable : MonoBehaviour 
 {
 
-	void OnCollisionEnter2D(Collision2D collision)
+	void OnTriggerEnter2D(Collider2D collision)
 	{
 		if(collision.gameObject.tag == "Player")
 		{
-			DataControl.levelData.soulFragment += 1;
-			Destroy (this.gameObject);
+			GameScene.gameScene.soulFragments += 1;
+			Destroy (gameObject);
 		}
 	}
 

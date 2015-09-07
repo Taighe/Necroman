@@ -11,12 +11,19 @@ public class LevelSelect : MonoBehaviour
 
 	void Start()
 	{
+		if (dataLink == "")
+			return;
 		m_data = GameObject.Find (dataLink).GetComponent<LevelData>();
+
 		Button button = GetComponent<Button> ();
 		button.interactable = m_data.unlocked;
 
 		//Score
 		Text score = transform.GetChild(1).GetComponent<Text>();
+
+		Text soulFragments = transform.GetChild(2).GetComponent<Text>();
+
+		soulFragments.text = "Soul Fragments " + m_data.soulFragment + " / 10";
 
 		if (m_data.highScore > -1) 
 		{

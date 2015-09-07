@@ -21,7 +21,7 @@ public class TitleManager : MonoBehaviour
 
 	public void Continue()
 	{
-
+		Application.LoadLevel ("levelSelectMenu_wip00");
 	}
 
 	public void Quit()

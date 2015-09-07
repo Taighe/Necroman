@@ -16,6 +16,12 @@ public class Goal : MonoBehaviour
 				DataControl.levelData.highScore = GameScene.GetLevelTime();
 			}
 
+			if(GameScene.gameScene.soulFragments > DataControl.levelData.soulFragment)
+			{
+				DataControl.levelData.soulFragment = GameScene.gameScene.soulFragments;
+			}
+
+
 			Application.LoadLevel(scene);
 		}
 	}

@@ -10,6 +10,7 @@ namespace nSCENE
 		public float levelTime;
 		static float s_levelTime;
 		public static GameScene gameScene;
+		public int soulFragments;
 
 		public GameObject player;
 
@@ -60,6 +61,7 @@ namespace nSCENE
 		public void Resume()
 		{
 			Scene.paused = false;
+			Scene.buttonPressed = true;
 
 		}
 		

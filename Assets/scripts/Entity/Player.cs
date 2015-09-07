@@ -184,11 +184,13 @@ public class Player : Entity
 
 	void Controls()
 	{
-		if (Input.GetButtonDown ("Submit") && Scene.paused == false) 
+		if (Input.GetButtonDown ("Submit") && Scene.buttonPressed == false) 
 		{
 			Scene.paused = true;
 			return;
 		}
+
+		Scene.buttonPressed = false;
 
 		if(Input.GetButton("Interact"))
 		{
@@ -302,7 +304,6 @@ public class Player : Entity
 			offsetY = 1;
 			offsetX = 0;
 		}
-
 
 		if (IsAttacking () == false) 
 		{
