@@ -36,6 +36,7 @@ namespace nENTITY
 		protected Rigidbody2D m_rigid2D;
 		protected Vector2 m_collisionNormals;
 		protected Vector2 m_velocity;
+		protected Vector2 m_lastFrameVelocity;
 		protected Collision2D m_collision;
 		protected bool IsINTERACTABLE;
 
@@ -73,6 +74,12 @@ namespace nENTITY
 		public void OnCollisionEnter2D(Collision2D collision)
 		{
 			m_collision = collision;
+
+			Entity _entity = collision.gameObject.GetComponent<Entity> ();
+			
+			Vector2 norms = collision.contacts[0].normal;
+
+			m_collisionNormals.y = norms.y;
 		}
 
 		public void OnCollisionExit2D(Collision2D collision)
@@ -111,6 +118,16 @@ namespace nENTITY
 			return false;
 		}
 
+		public bool Landed()
+		{
+			if(m_collisionNormals.y > 0 && m_lastFrameVelocity.y < 0)
+			{
+				return true;
+			}
+
+			return false;
+		}
+
 		public bool IsPaused () 
 		{
 			if (Scene.paused == true) 
@@ -129,9 +146,11 @@ namespace nENTITY
 
 			m_lastFacing = m_facing;
 
+			m_lastFrameVelocity = m_velocity;
+
 			m_velocity.x = m_rigid2D.velocity.x;
-			if(IsPaused() == false)
-				m_velocity.y = m_rigid2D.velocity.y;
+
+			m_velocity.y = m_rigid2D.velocity.y;
 			
 			Vector2 vel = m_rigid2D.velocity;
 			if (m_velocity.y < maxFallSpeed) 

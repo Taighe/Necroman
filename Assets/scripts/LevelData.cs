@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 using nDATACONTROL;
+using nCOLLECTABLE;
 
 namespace nLEVELDATA
 {
@@ -9,7 +10,7 @@ namespace nLEVELDATA
 	{
 		public float highScore;
 		public bool unlocked;
-		public int soulFragment;
+		public int scoreSoulFragments;
 		public bool medal;
 
 		// Use this for initialization
@@ -23,6 +24,5 @@ namespace nLEVELDATA
 		{
 
 		}
-
 	}
 }

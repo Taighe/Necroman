@@ -2,6 +2,7 @@
 using System.Collections;
 using nDATACONTROL;
 using nSCENE;
+using nCOLLECTABLE;
 
 public class Goal : MonoBehaviour 
 {
@@ -11,21 +12,23 @@ public class Goal : MonoBehaviour
 	{
 		if (collision.gameObject.tag == "Player")
 		{
-			if(GameScene.GetLevelTime() < DataControl.levelData.highScore || DataControl.levelData.highScore == -1)
-			{
-				DataControl.levelData.highScore = GameScene.GetLevelTime();
-			}
 
-			if(GameScene.gameScene.soulFragments > DataControl.levelData.soulFragment)
-			{
-				DataControl.levelData.soulFragment = GameScene.gameScene.soulFragments;
-			}
+			EndLevel();
 
+			DataControl.control.Save();
 
 			Application.LoadLevel(scene);
 		}
 	}
 
+	void EndLevel()
+	{
+		if(GameScene.gameScene.currentSoulFragments > DataControl.levelData.scoreSoulFragments)
+		{
+			DataControl.levelData.scoreSoulFragments = GameScene.gameScene.currentSoulFragments;
+		}
+	}
+	
 	// Use this for initialization
 	void Start () 
 	{

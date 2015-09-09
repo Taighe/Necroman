@@ -5,18 +5,18 @@ using nSCENE;
 
 public class GUIManager : MonoBehaviour 
 {
-	public GameObject scene;
-	Text[] guiElements;
+	Text m_soulFragment;
 	GameObject m_pauseMenu;
 	Image m_lives;
 	Player m_player;
 
 	void Awake()
 	{
-		guiElements = GetComponentsInChildren<Text> ();
 		m_pauseMenu = transform.GetChild (1).gameObject;
 		m_lives = transform.GetChild (2).GetComponent<Image> ();
 		m_player = GameScene.gameScene.player.GetComponent<Player> ();
+		m_soulFragment = transform.GetChild(3).GetComponent<Text>();
+
 	}
 
 	// Use this for initialization
@@ -29,7 +29,7 @@ public class GUIManager : MonoBehaviour
 	void Update () 
 	{
 		//guiElements[0].text = "Time " + scene.GetComponent<GameScene>().levelTime / 60;
-		//guiElements[1].enabled = Scene.paused;
+		m_soulFragment.text = "" + GameScene.gameScene.currentSoulFragments;
 		m_pauseMenu.SetActive(Scene.paused);
 		int currentLives = m_player.maxRemnants - m_player.m_remnantCount;
 		m_lives.fillAmount = (float)currentLives / (float)m_player.maxRemnants; 

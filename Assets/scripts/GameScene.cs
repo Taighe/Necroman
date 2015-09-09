@@ -10,7 +10,7 @@ namespace nSCENE
 		public float levelTime;
 		static float s_levelTime;
 		public static GameScene gameScene;
-		public int soulFragments;
+		public int currentSoulFragments;
 
 		public GameObject player;
 
@@ -26,6 +26,7 @@ namespace nSCENE
 			}
 
 			s_levelTime = levelTime;
+
 			if (GameObject.Find (dataLink) == null)
 				return;
 

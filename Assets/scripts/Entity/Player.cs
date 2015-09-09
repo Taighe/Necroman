@@ -9,14 +9,17 @@ using nFOLLOWCAMERA;
 public enum AnimationState
 {
 	PRE_INTRO = -2,
-	INTRO,
-	IDLE,
-	RUN,
-	JUMP,
-	FALL,
-	ATTACK,
-	ATTACK_UP,
-	ATTACK_DOWN
+	INTRO = -1,
+	IDLE = 0,
+	RUN = 1,
+	JUMP = 2,
+	FALL = 3,
+	ATTACK = 4,
+	ATTACK_UP = 5,
+	ATTACK_DOWN = 6,
+	LAND = 7,
+	LOOK_UP = 8,
+	LOOK_DOWN = 9
 }
 
 public class Player : Entity 
@@ -66,7 +69,7 @@ public class Player : Entity
 	//Collisions
 	void OnTriggerEnter2D(Collider2D collision)
 	{
-		if (collision.gameObject.name == "Check Point") 
+		if (collision.gameObject.tag == "Checkpoint") 
 		{
 			checkPoint = new Vector2(collision.transform.position.x, collision.transform.position.y);
 		}
@@ -166,25 +169,14 @@ public class Player : Entity
 		m_time = 0;
 	}
 
-	void TimedJump()
+	int Looking()
 	{
-		if (m_time >= 1.0f) 
-		{
-			JUMPAPEX = true;
-			return;
-		}
-
-		m_time += 10.0f * Time.deltaTime;
-
-		m_time = Mathf.Clamp (m_time, 0, 1.0f);
-
-		jumpForce = minJump + m_time * (maxJump - minJump);
-		m_velocity.y = jumpForce;
+		return (int)Input.GetAxis ("Vertical");
 	}
 
 	void Controls()
 	{
-		if (Input.GetButtonDown ("Submit") && Scene.buttonPressed == false) 
+		if (Input.GetButtonDown ("Pause") && Scene.buttonPressed == false) 
 		{
 			Scene.paused = true;
 			return;
@@ -221,13 +213,9 @@ public class Player : Entity
 		//Jump
 		bool _ground = IsOnGround ();
 
-		if (Input.GetButtonDown ("Jump") && _ground && !(Input.GetAxis ("Vertical") < 0))
+		if (Input.GetButtonDown ("Jump") && _ground )
 		{
 			Jump ();
-		}
-		else if (Input.GetButton ("Jump") && _ground && Input.GetAxis ("Vertical") < 0 && m_collision.gameObject.tag == "Remnant")//Drop
-		{
-			Drop ();
 		}
 
 		if (Input.GetButton ("Jump") == true && JUMPINITIATED == true && JUMPKEYRELEASED == false)
@@ -248,8 +236,28 @@ public class Player : Entity
 		if(Input.GetAxis ("Horizontal") > 0) m_facing = Facing.RIGHT;
 
 		//Camera actions
-		if(IsOnGround() ) FollowCamera.control.offsetY = Input.GetAxis ("Vertical") * peekOffsetY;
+		if (IsOnGround () && m_velocity.x == 0) 
+		{
+			FollowCamera.control.offsetY = Input.GetAxis ("Vertical") * peekOffsetY;
+		}
+		else
+			FollowCamera.control.offsetY = 0;
+	}
 
+	void TimedJump()
+	{
+		if (m_time >= 1.0f) 
+		{
+			JUMPAPEX = true;
+			return;
+		}
+		
+		m_time += 10.0f * Time.deltaTime;
+		
+		m_time = Mathf.Clamp (m_time, 0, 1.0f);
+		
+		jumpForce = minJump + m_time * (maxJump - minJump);
+		m_velocity.y = jumpForce;
 	}
 
 	public void Hop(float boost)
@@ -309,7 +317,7 @@ public class Player : Entity
 		{
 			GameObject _obj = (GameObject)Instantiate (p_attack, transform.position, new Quaternion(0, 0, offsetY, 1) ); //Instatiate AttackBox Object
 			_obj.transform.SetParent(transform);
-			_obj.GetComponent<AttackBox> ().SetAttack (0.5f, 1.0f, 1, Team.PLAYER, this.gameObject);
+			_obj.GetComponent<AttackBox> ().SetAttack (0.5f, 0.3f, 1, Team.PLAYER, this.gameObject);
 
 			Vector3 _pos = new Vector3(transform.position.x + (offsetX * (float)m_facing), transform.position.y + offsetY, transform.position.z);
 			_obj.transform.position = _pos;
@@ -389,6 +397,7 @@ public class Player : Entity
 				
 				_particle.emissionRate = 15;
 				_box.enabled = false;
+				_sprite.enabled = false;
 				Vector2 vel = Vector2.zero;
 				m_rigid2D.velocity = vel;
 				m_rigid2D.isKinematic = true;
@@ -407,10 +416,9 @@ public class Player : Entity
 
 	void AnimationControl()
 	{
-		if (IsOnGround ())
+		if(IsOnGround () && m_velocity.x == 0)
 		{
 			m_animState = AnimationState.IDLE;
-			m_animator.speed = 1.0f;
 		}
 
 		if (m_velocity.x != 0 && IsOnGround()) 
@@ -418,8 +426,40 @@ public class Player : Entity
 			m_animState = AnimationState.RUN;
 		}
 
+		if(Landed ())
+		{
+			m_animState = AnimationState.LAND;
+		}
+
+		if (!IsOnGround() && m_velocity.y > 0) 
+		{
+			m_animState = AnimationState.JUMP;
+		}
+
+		if (!IsOnGround() && m_velocity.y < 0) 
+		{
+			m_animState = AnimationState.FALL;
+		}
+	
+		if(Looking() < 0 && m_velocity.x == 0)
+		{
+			m_animState = AnimationState.LOOK_DOWN;
+		}
+		else if(Looking() > 0 && m_velocity.x == 0) m_animState = AnimationState.LOOK_UP;
+
+		AnimatorStateInfo _state = m_animator.GetCurrentAnimatorStateInfo (0);
+		if (_state.IsName("Land 7") || _state.IsName("Attack") && IsOnGround()) 
+		{
+			m_velocity.x = 0;
+		}
+
+		if(IsAttacking() )
+		{
+			m_animState = AnimationState.ATTACK;
+		}
 
 		m_animator.SetInteger ("State", (int)m_animState);
+
 	}
 
 	public bool RespawnSignal()

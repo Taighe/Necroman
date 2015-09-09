@@ -13,6 +13,7 @@ public class LevelSelect : MonoBehaviour
 	{
 		if (dataLink == "")
 			return;
+
 		m_data = GameObject.Find (dataLink).GetComponent<LevelData>();
 
 		Button button = GetComponent<Button> ();
@@ -23,7 +24,7 @@ public class LevelSelect : MonoBehaviour
 
 		Text soulFragments = transform.GetChild(2).GetComponent<Text>();
 
-		soulFragments.text = "Soul Fragments " + m_data.soulFragment + " / 10";
+		soulFragments.text = "Soul Fragments " + m_data.scoreSoulFragments + " / 10";
 
 		if (m_data.highScore > -1) 
 		{
