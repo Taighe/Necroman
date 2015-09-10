@@ -35,6 +35,7 @@ public class LevelSelect : MonoBehaviour
 
 	public void LoadLevel(string scene)
 	{
+		DataControl.control.levelData = m_data;
 		Application.LoadLevel (scene);
 	}
 	

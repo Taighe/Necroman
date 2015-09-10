@@ -4,8 +4,10 @@ using nENTITY;
 
 namespace nREMNANT
 {
+
 	public class Remnant : Entity 
 	{ 
+		public Object soulParticle;
 		BoxCollider2D m_collider;
 
 		void OnTriggerStay2D(Collider2D collision)
@@ -24,6 +26,7 @@ namespace nREMNANT
 
 		public override void Die()
 		{
+			Instantiate (soulParticle, transform.position, transform.rotation);
 			Destroy (this.gameObject);
 		}
 	}

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using nSCENE;
+using nLEVELDATA;
 
 namespace nCOLLECTABLE
 {

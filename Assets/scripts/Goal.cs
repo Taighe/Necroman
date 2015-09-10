@@ -23,10 +23,14 @@ public class Goal : MonoBehaviour
 
 	void EndLevel()
 	{
-		if(GameScene.gameScene.currentSoulFragments > DataControl.levelData.scoreSoulFragments)
+		DataControl.control.levelData.scoreSoulFragments = GameScene.gameScene.currentSoulFragments;
+		GameObject _collectable = GameScene.gameScene.gameObject.transform.GetChild (1).gameObject;
+
+		for (int i = 0; i < GameScene.gameScene.totalSoulFragments; i++) 
 		{
-			DataControl.levelData.scoreSoulFragments = GameScene.gameScene.currentSoulFragments;
+			DataControl.control.levelData.collectedSouls[i] = _collectable.transform.GetChild(i).GetComponent<Collectable>().IsCollected;
 		}
+
 	}
 	
 	// Use this for initialization

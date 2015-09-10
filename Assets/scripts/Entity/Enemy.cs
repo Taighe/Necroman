@@ -30,7 +30,7 @@ public class Enemy : Entity
 
 	void OnCollisionEnter2D(Collision2D collision)
 	{
-		if(collision.gameObject.tag == "Player" && m_state == State.ALIVE)
+		if(collision.gameObject.tag == "Player" && m_state == State.ALIVE && collision.gameObject.GetComponent<Entity>().m_team == Team.HOSTILE)
 		{
 			collision.gameObject.GetComponent<Entity>().Damaged(1);
 		}
@@ -61,7 +61,10 @@ public class Enemy : Entity
 
 			if(m_player.RespawnSignal() )
 			{
-				Respawn();
+				if(m_player.m_respawnArea.Contains(transform.position) )
+				{
+					Respawn();
+				}
 			}
 		}
 	}
@@ -83,6 +86,7 @@ public class Enemy : Entity
 	public void Respawn()
 	{
 		IsRESPAWNING = true;
+		m_team = Team.PLAYER;
 	}
 
 	bool SetState(State state, ref State address)

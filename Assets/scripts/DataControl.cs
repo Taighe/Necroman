@@ -23,15 +23,16 @@ namespace nDATACONTROL
 		
 		public SaveData()
 		{
-			m_data = new SerialLevelData[3];
+			m_data = new SerialLevelData[4];
 		}
 	}
 
 	public class DataControl : MonoBehaviour 
 	{
 		public static DataControl control;
-		public static LevelData levelData;
+		public LevelData levelData;
 
+		public LevelData startlevel;
 		public int numOflevels;
 
 		// Use this for initialization
@@ -40,6 +41,7 @@ namespace nDATACONTROL
 			if (control == null) 
 			{
 				DontDestroyOnLoad (gameObject);
+				levelData = startlevel;
 				control = this;
 			} 
 			else if(control != this)

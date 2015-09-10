@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using nDATACONTROL;
-using nLEVELDATA;
+using nCOLLECTABLE;
 
 namespace nSCENE
 {
@@ -10,13 +10,14 @@ namespace nSCENE
 		public float levelTime;
 		static float s_levelTime;
 		public static GameScene gameScene;
+		public int totalSoulFragments;
 		public int currentSoulFragments;
 
 		public GameObject player;
 
 		public string dataLink;
 
-		LevelData data;
+		DataControl data;
 
 		void Awake()
 		{
@@ -27,13 +28,21 @@ namespace nSCENE
 
 			s_levelTime = levelTime;
 
-			if (GameObject.Find (dataLink) == null)
-				return;
+			currentSoulFragments = DataControl.control.levelData.scoreSoulFragments;
+			if(DataControl.control.levelData.collectedSouls.Length == 0)
+			{
+				DataControl.control.levelData.collectedSouls = new bool[totalSoulFragments];
+			}
 
-			data = GameObject.Find (dataLink).GetComponent<LevelData> ();
+			for(int i = 0; i < totalSoulFragments; i++)
+			{
+				GameObject _collectables = gameScene.gameObject.transform.GetChild(1).gameObject;
+				_collectables.transform.GetChild(i).GetComponent<Collectable>().IsCollected = DataControl.control.levelData.collectedSouls[i];
+			}
 
-			data.unlocked = true;
-			DataControl.levelData = data;
+			//data = GameObject.Find (dataLink).GetComponent<LevelData> ();
+
+			//data.unlocked = true;
 		}
 		
 		// Update is called once per frame
@@ -72,6 +81,4 @@ namespace nSCENE
 			Application.LoadLevel("levelSelectMenu_wip00");
 		}
 	}
-
-
 }

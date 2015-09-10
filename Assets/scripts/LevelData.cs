@@ -11,6 +11,7 @@ namespace nLEVELDATA
 		public float highScore;
 		public bool unlocked;
 		public int scoreSoulFragments;
+		public bool[] collectedSouls;
 		public bool medal;
 
 		// Use this for initialization

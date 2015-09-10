@@ -43,14 +43,15 @@ public class Player : Entity
 
 	public int m_remnantCount;
 
+	public Rect m_respawnArea;
+
 	GameObject interactable;
 	GameObject pickUp;
 
-	Rect m_respawnArea;
-
 	float jumpForce;
-
-	Vector2 checkPoint;
+	
+	Vector2 m_lastCheckPoint;
+	Vector2 m_checkPoint;
 
 	bool JUMPKEYRELEASED = false;
 	bool JUMPINITIATED = false;
@@ -71,7 +72,7 @@ public class Player : Entity
 	{
 		if (collision.gameObject.tag == "Checkpoint") 
 		{
-			checkPoint = new Vector2(collision.transform.position.x, collision.transform.position.y);
+			m_lastCheckPoint = new Vector2(collision.transform.position.x, collision.transform.position.y);
 		}
 
 	}
@@ -104,12 +105,11 @@ public class Player : Entity
 		m_animator = GetComponent<Animator> ();
 
 		m_animator.SetInteger ("State", startAnim);
-
-		m_respawnArea = new Rect (transform.position, new Vector2(3.0f, 3.0f) );
+		m_respawnArea = new Rect (transform.position, new Vector2(15.0f, 15.0f) );
 		m_remnants = new ArrayList ();
 		m_animState = AnimationState.IDLE;
 		m_attack = null;
-		checkPoint = new Vector2(transform.position.x, transform.position.y);
+		m_lastCheckPoint = new Vector2(transform.position.x, transform.position.y);
 		SetState (State.ALIVE, ref m_state);
 	}
 
@@ -138,8 +138,19 @@ public class Player : Entity
 				
 				ChangeInFacing();
 
-				m_rigid2D.velocity = m_velocity; 
+				m_rigid2D.velocity = m_velocity;
+				
+				//Keep track of last remnant for respawn
+				m_checkPoint = m_lastCheckPoint;	
 
+				if(m_remnants.Count > 0)
+				{
+					//GameObject _lastRemnant = (GameObject)m_remnants[m_remnants.Count - 1];
+					//m_checkPoint = new Vector2(_lastRemnant.transform.position.x, _lastRemnant.transform.position.y - remnantSpawnOffsetY * 2);
+				}
+				
+				m_respawnArea.center = transform.position;
+				
 				break;
 			}
 
@@ -252,7 +263,7 @@ public class Player : Entity
 			return;
 		}
 		
-		m_time += 10.0f * Time.deltaTime;
+		m_time += 5.0f * Time.deltaTime;
 		
 		m_time = Mathf.Clamp (m_time, 0, 1.0f);
 		
@@ -270,7 +281,8 @@ public class Player : Entity
 	{
 		for(int i = 0; i < m_remnants.Count; i++)
 		{
-			Destroy( (GameObject)m_remnants[i] );
+			GameObject _obj = (GameObject)m_remnants[i];
+			_obj.GetComponent<Entity>().Die();
 		}
 
 		m_remnants.Clear ();
@@ -356,16 +368,16 @@ public class Player : Entity
 		Vector3 remPos = transform.position;
 		remPos.y += remnantSpawnOffsetY;
 
-		if(m_collision.gameObject.tag != "Cursed" && m_remnants.Count < maxRemnants)
+		if(m_collision.gameObject.tag != "Character" && m_remnants.Count < maxRemnants)
 		{
 			GameObject _obj = (GameObject)Instantiate(p_remnant, remPos, transform.rotation);
 			m_remnants.Add (_obj.gameObject);
+
 		}
 
-		Vector3 _pos = new Vector3(checkPoint.x, checkPoint.y, 0);
+		Vector3 _pos = new Vector3(m_checkPoint.x, m_checkPoint.y, 0);
 
 		GetComponent<Translation> ().SetTranslate (transform.position, _pos);
-
 	}
 
 	bool SetState(State state, ref State address)
@@ -450,7 +462,7 @@ public class Player : Entity
 		AnimatorStateInfo _state = m_animator.GetCurrentAnimatorStateInfo (0);
 		if (_state.IsName("Land 7") || _state.IsName("Attack") && IsOnGround()) 
 		{
-			m_velocity.x = 0;
+			//m_velocity.x = 0;
 		}
 
 		if(IsAttacking() )
@@ -464,7 +476,7 @@ public class Player : Entity
 
 	public bool RespawnSignal()
 	{
-		if (Input.GetButtonDown ("Reset")) 
+		if (Input.GetButtonDown ("Reanimate")) 
 		{
 			return true;
 		} 
@@ -479,7 +491,7 @@ public class Player : Entity
 			GameObject _obj = (GameObject)m_remnants[i];
 
 			if(_obj.GetComponent<Entity>().IsDestroyed)
-			m_remnants.RemoveAt(i);
+				m_remnants.RemoveAt(i);
 
 		}
 	}
