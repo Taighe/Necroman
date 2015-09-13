@@ -22,6 +22,11 @@ public enum AnimationState
 	LOOK_DOWN = 9
 }
 
+public class CustomInput
+{
+
+};
+
 public class Player : Entity 
 {
 	//prefabs
@@ -29,6 +34,7 @@ public class Player : Entity
 	public GameObject p_attack;
 	public GameObject p_deathEffect;
 	public bool disableControl;
+	public GameObject deathExplosion;
 
 	public int maxRemnants;
 	public int startAnim;
@@ -243,9 +249,6 @@ public class Player : Entity
 		//Movement
 		m_velocity.x = Input.GetAxis ("Horizontal") * speed;
 
-		if(Input.GetAxis ("Horizontal") < 0) m_facing = Facing.LEFT;
-		if(Input.GetAxis ("Horizontal") > 0) m_facing = Facing.RIGHT;
-
 		//Camera actions
 		if (IsOnGround () && m_velocity.x == 0) 
 		{
@@ -253,6 +256,14 @@ public class Player : Entity
 		}
 		else
 			FollowCamera.control.offsetY = 0;
+
+		if(IsAttacking() && IsOnGround() )
+		{
+			m_velocity.x = 0;
+		}
+
+		if(Input.GetAxis ("Horizontal") < 0) m_facing = Facing.LEFT;
+		if(Input.GetAxis ("Horizontal") > 0) m_facing = Facing.RIGHT;
 	}
 
 	void TimedJump()
@@ -293,12 +304,9 @@ public class Player : Entity
 		if (m_attack != null) 
 		{
 			return true;
-		} 
-		else 
-		{
-			return false;
 		}
 
+		return false;
 	}
 
 	void Throw()
@@ -325,15 +333,19 @@ public class Player : Entity
 			offsetX = 0;
 		}
 
-		if (IsAttacking () == false) 
+		if (IsAttacking () == false ) 
 		{
-			GameObject _obj = (GameObject)Instantiate (p_attack, transform.position, new Quaternion(0, 0, offsetY, 1) ); //Instatiate AttackBox Object
+			GameObject _obj = (GameObject)Instantiate (p_attack, transform.position, new Quaternion(0, 0, offsetY, 1) );
+
+			//Instatiate AttackBox Object
 			_obj.transform.SetParent(transform);
-			_obj.GetComponent<AttackBox> ().SetAttack (0.5f, 0.3f, 1, Team.PLAYER, this.gameObject);
+			_obj.GetComponent<AttackBox> ().SetAttack (0.3f, 0.3f, 1, Team.PLAYER, this.gameObject);
 
 			Vector3 _pos = new Vector3(transform.position.x + (offsetX * (float)m_facing), transform.position.y + offsetY, transform.position.z);
 			_obj.transform.position = _pos;
-
+			Vector3 _scale = new Vector3(1, 0.9f, 1);
+			
+			_obj.transform.localScale = _scale;
 			m_attack = _obj;
 		}
 	}
@@ -378,6 +390,7 @@ public class Player : Entity
 		Vector3 _pos = new Vector3(m_checkPoint.x, m_checkPoint.y, 0);
 
 		GetComponent<Translation> ().SetTranslate (transform.position, _pos);
+		Instantiate (deathExplosion, transform.position, transform.rotation);
 	}
 
 	bool SetState(State state, ref State address)
@@ -460,15 +473,12 @@ public class Player : Entity
 		else if(Looking() > 0 && m_velocity.x == 0) m_animState = AnimationState.LOOK_UP;
 
 		AnimatorStateInfo _state = m_animator.GetCurrentAnimatorStateInfo (0);
-		if (_state.IsName("Land 7") || _state.IsName("Attack") && IsOnGround()) 
-		{
-			//m_velocity.x = 0;
-		}
 
-		if(IsAttacking() )
+		if(Input.GetButtonDown ("Attack")) 
 		{
 			m_animState = AnimationState.ATTACK;
-		}
+		} 
+
 
 		m_animator.SetInteger ("State", (int)m_animState);
 

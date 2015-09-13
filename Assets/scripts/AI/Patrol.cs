@@ -19,7 +19,7 @@ public class Patrol : MonoBehaviour
 	}
 	
 	// Update is called once per frame
-	void FixedUpdate () 
+	void Update () 
 	{
 		if (Scene.paused == true)
 			return;
@@ -35,6 +35,12 @@ public class Patrol : MonoBehaviour
 	void AiPatrol()
 	{
 		State _state = GetComponent<Entity> ().m_state;
+
+		Entity _entity = GetComponent<Entity> ();
+
+		Vector2 _vel = _entity.m_rigid2D.velocity; 
+
+		_vel.x = 0;
 
 		if(_state == State.ALIVE)
 		{
@@ -53,12 +59,12 @@ public class Patrol : MonoBehaviour
 			{
 				switchTarget();
 			}
-			
-			Vector3 _vel = new Vector3();
-			_vel.x += speed * (int)_facing * Time.smoothDeltaTime;
-			
-			transform.position += _vel;
+
+			_vel.x = speed * (int)_facing;
+
 		}
+
+		_entity.m_rigid2D.velocity = _vel;
 	}
 
 	void switchTarget()

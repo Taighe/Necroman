@@ -11,9 +11,12 @@ public class Turret : Entity
 
 	public float m_timer;
 
+	Light m_light;
+
 	// Use this for initialization
 	void Start () 
 	{
+		m_light = transform.GetChild (0).gameObject.GetComponent<Light>();
 	}
 	
 	// Update is called once per frame
@@ -23,6 +26,8 @@ public class Turret : Entity
 			return;
 
 		m_timer += 1.0f * Time.deltaTime;
+
+		m_light.intensity = m_timer;
 
 		if(CanFire() )
 		{

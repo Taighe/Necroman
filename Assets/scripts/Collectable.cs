@@ -28,6 +28,7 @@ namespace nCOLLECTABLE
 		{
 			if(IsCollected)
 			{
+				transform.GetChild(0).gameObject.SetActive(false);
 				BoxCollider2D _box = GetComponent <BoxCollider2D>();
 				_box.enabled = false;
 			}

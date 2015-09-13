@@ -33,7 +33,7 @@ namespace nENTITY
 
 		public bool IsPLATFORM;
 
-		protected Rigidbody2D m_rigid2D;
+		public Rigidbody2D m_rigid2D;
 		protected Vector2 m_collisionNormals;
 		protected Vector2 m_velocity;
 		protected Vector2 m_lastFrameVelocity;

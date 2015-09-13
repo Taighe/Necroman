@@ -16,11 +16,22 @@ namespace nFOLLOWCAMERA
 		public GameObject cameraBounds;
 		public int layerZ;
 
+		public float followRange;
+
+		Vector2 followRangeMin;
+		Vector2 followRangeMid;
+		Vector2 followRangeMax;
+
 		Vector3 point1;
 		Vector3 point2;
 
 		float startTime;
 		float endTime;
+
+		void OnDrawGizmos()
+		{
+			Debug.DrawLine (followRangeMin, followRangeMax);
+		}
 
 		void Awake()
 		{
@@ -33,6 +44,11 @@ namespace nFOLLOWCAMERA
 		{
 			if(followObject == null) return;
 
+			startTime = Time.time;
+
+			followRangeMin.x = followObject.transform.position.x - followRange;
+			followRangeMid.x = followObject.transform.position.x;
+			followRangeMax.x = followObject.transform.position.x + followRange;
 			point1 = transform.position;
 			point2 = followObject.transform.position;
 		}
@@ -41,13 +57,31 @@ namespace nFOLLOWCAMERA
 		void Update () 
 		{
 			Vector3 oldPos = transform.position;
-			float distCovered = (Time.smoothDeltaTime * followSpeed);
+
+			float distCovered = Time.deltaTime * followSpeed;
 
 			Vector2 _pos = Vector2.Lerp(point1, point2, distCovered );
 
-			transform.position = _pos;
+			Vector2 _dest = point2;
 
-			Translate (transform.position, followObject.transform.position);
+			//tether
+			if(followObject.transform.position.x >= followRangeMax.x)
+			{
+				followRangeMax.x = followObject.transform.position.x;
+				followRangeMin.x = followRangeMax.x - followRange * 2;
+				_dest.x = followObject.transform.position.x + offsetX;
+			}
+
+			if(followObject.transform.position.x <= followRangeMin.x)
+			{
+				followRangeMin.x = followObject.transform.position.x;
+				followRangeMax.x = followRangeMin.x + followRange * 2;
+				_dest.x = followObject.transform.position.x - offsetX;
+			}
+
+			_dest.y = followObject.transform.position.y + offsetY;
+
+			Translate (_pos, _dest);
 
 			StayWithBounds (ref _pos, ref oldPos);
 
@@ -86,10 +120,8 @@ namespace nFOLLOWCAMERA
 		public void Translate (Vector3 origin, Vector3 dest)
 		{		
 			point1 = origin;
-
-			dest = new Vector3 (dest.x + offsetX * (float)followObject.GetComponent<Entity>().m_facing, dest.y + offsetY, dest.z);
 			point2 = dest;
-
+			startTime = Time.time;
 		}
 	}
 }

@@ -18,9 +18,9 @@ namespace nATTACK
 		Team m_team;
 
 		GameObject m_owner;
+		public GameObject explosion;
 
-		// Use this for initialization
-		void Start () 
+		void Start()
 		{
 		
 		}
@@ -40,6 +40,7 @@ namespace nATTACK
 						GameScene.gameScene.player.GetComponent<Player>().ResizeRemnantArray();
 					}
 
+					Instantiate(explosion, transform.position, transform.rotation);
 					Destroy(this.gameObject);
 
 				}
@@ -68,6 +69,7 @@ namespace nATTACK
 					}
 
 					_entity.GetComponent<Entity>().Damaged(m_damage);
+					Instantiate(explosion, transform.position, transform.rotation);
 					Destroy(this.gameObject);
 				}
 			}

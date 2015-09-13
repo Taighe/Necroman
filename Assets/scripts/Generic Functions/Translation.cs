@@ -4,8 +4,8 @@ using System.Collections;
 public class Translation : MonoBehaviour 
 {
 	public float speed = 1.0f;
-	Vector3 point1;
-	Vector3 point2;
+	public Vector3 point1;
+	public Vector3 point2;
 	public float m_timer;
 	
 	// Use this for initialization

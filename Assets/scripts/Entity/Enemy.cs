@@ -30,7 +30,7 @@ public class Enemy : Entity
 
 	void OnCollisionEnter2D(Collision2D collision)
 	{
-		if(collision.gameObject.tag == "Player" && m_state == State.ALIVE && collision.gameObject.GetComponent<Entity>().m_team == Team.HOSTILE)
+		if(collision.gameObject.tag == "Player" && m_team == Team.HOSTILE)
 		{
 			collision.gameObject.GetComponent<Entity>().Damaged(1);
 		}
@@ -87,6 +87,7 @@ public class Enemy : Entity
 	{
 		IsRESPAWNING = true;
 		m_team = Team.PLAYER;
+		transform.GetChild (0).gameObject.SetActive(true);
 	}
 
 	bool SetState(State state, ref State address)
@@ -95,9 +96,7 @@ public class Enemy : Entity
 		{
 			case State.ALIVE:
 			{
-				BoxCollider2D _box = GetComponent<BoxCollider2D>();
 				gameObject.layer = 0;
-				_box.enabled = true;
 				m_rigid2D.isKinematic = true;
 				address = state;
 				return true; 
