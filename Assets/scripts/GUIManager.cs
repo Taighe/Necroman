@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using nSCENE;
 
@@ -9,6 +10,7 @@ public class GUIManager : MonoBehaviour
 	GameObject m_pauseMenu;
 	Image m_lives;
 	Player m_player;
+	EventSystem m_event;
 
 	void Awake()
 	{
@@ -16,7 +18,6 @@ public class GUIManager : MonoBehaviour
 		m_lives = transform.GetChild (2).GetComponent<Image> ();
 		m_player = GameScene.gameScene.player.GetComponent<Player> ();
 		m_soulFragment = transform.GetChild(3).GetComponent<Text>();
-
 	}
 
 	// Use this for initialization

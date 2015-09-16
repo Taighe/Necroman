@@ -65,14 +65,14 @@ namespace nFOLLOWCAMERA
 			Vector2 _dest = point2;
 
 			//tether
-			if(followObject.transform.position.x >= followRangeMax.x)
+			if(followObject.transform.position.x > followRangeMax.x)
 			{
 				followRangeMax.x = followObject.transform.position.x;
 				followRangeMin.x = followRangeMax.x - followRange * 2;
 				_dest.x = followObject.transform.position.x + offsetX;
 			}
 
-			if(followObject.transform.position.x <= followRangeMin.x)
+			if(followObject.transform.position.x < followRangeMin.x)
 			{
 				followRangeMin.x = followObject.transform.position.x;
 				followRangeMax.x = followRangeMin.x + followRange * 2;
@@ -103,7 +103,6 @@ namespace nFOLLOWCAMERA
 				if ( !(camWorldMin.x > worldBounds.min.x && camWorldMax.x < worldBounds.max.x))
 				{
 					currentPosition.x = oldPosition.x;
-					
 				} 
 				
 				if( !(camWorldMin.y > worldBounds.min.y && camWorldMax.y < worldBounds.max.y))

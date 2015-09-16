@@ -67,6 +67,8 @@ public class Enemy : Entity
 				}
 			}
 		}
+
+		ChangeInFacing ();
 	}
 
 	public override void Die()

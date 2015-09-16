@@ -13,6 +13,7 @@ namespace nLEVELDATA
 		public int scoreSoulFragments;
 		public bool[] collectedSouls;
 		public bool medal;
+		public string levelName;
 
 		// Use this for initialization
 		void Awake () 

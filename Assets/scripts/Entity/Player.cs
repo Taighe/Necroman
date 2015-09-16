@@ -22,11 +22,6 @@ public enum AnimationState
 	LOOK_DOWN = 9
 }
 
-public class CustomInput
-{
-
-};
-
 public class Player : Entity 
 {
 	//prefabs

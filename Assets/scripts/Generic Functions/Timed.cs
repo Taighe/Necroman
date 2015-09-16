@@ -11,7 +11,7 @@ public class Timed : MonoBehaviour
 
 	public GameObject timedObject;
 
-	float m_timer;
+	public float m_timer;
 	float m_delay;
 
 	// Use this for initialization
@@ -29,7 +29,7 @@ public class Timed : MonoBehaviour
 		if (Scene.paused)
 			return;
 
-		m_timer = Time.time;
+		m_timer += Time.deltaTime * 1.0f;
 
 		if (m_timer >= m_delay ) 
 		{

@@ -25,6 +25,7 @@ public class Patrol : MonoBehaviour
 			return;
 
 		AiPatrol ();
+
 	}
 
 	void OnDrawGizmos()
@@ -54,17 +55,18 @@ public class Patrol : MonoBehaviour
 			{
 				_facing = Facing.LEFT;
 			}
-			
+
 			if(transform.position.x > target.x - 0.5f && transform.position.x < target.x + 0.5f)
 			{
 				switchTarget();
 			}
 
 			_vel.x = speed * (int)_facing;
-
+			GetComponent <Entity> ().m_facing = _facing;
 		}
 
 		_entity.m_rigid2D.velocity = _vel;
+
 	}
 
 	void switchTarget()

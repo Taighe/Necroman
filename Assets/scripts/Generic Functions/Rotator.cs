@@ -6,6 +6,7 @@ using nSCENE;
 public class Rotator : MonoBehaviour 
 {
 	public float speed;
+	public Vector3 rotateAxis;
 
 	// Use this for initialization
 	void Start () 
@@ -18,14 +19,14 @@ public class Rotator : MonoBehaviour
 	{
 		if (Scene.paused)
 			return;
+		Vector3 axis;
 
 		float angle;
-		Vector3 axis;
 
 		transform.localRotation.ToAngleAxis (out angle, out axis);
 
 		angle += speed * Time.deltaTime;
 
-		transform.RotateAround (transform.position, new Vector3(0,0,1), speed);
+		transform.RotateAround (transform.position, rotateAxis, speed);
 	}
 }
