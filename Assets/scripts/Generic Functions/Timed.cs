@@ -17,10 +17,10 @@ public class Timed : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
-		m_delay = offDelay + Time.time;
+		m_delay = offDelay;
 		
 		if (active)
-			m_delay = onDelay + Time.time;
+			m_delay = onDelay;
 	}
 	
 	// Update is called once per frame
@@ -29,7 +29,7 @@ public class Timed : MonoBehaviour
 		if (Scene.paused)
 			return;
 
-		m_timer += Time.deltaTime * 1.0f;
+		m_timer += 1.0f * Time.deltaTime;
 
 		if (m_timer >= m_delay ) 
 		{

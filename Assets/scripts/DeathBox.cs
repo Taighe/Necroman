@@ -8,7 +8,7 @@ public class DeathBox : MonoBehaviour
 	{
 		if (collision.gameObject.tag == "Player") 
 		{
-			collision.gameObject.GetComponent<Entity>().Die();
+			collision.gameObject.GetComponent<Entity>().Damaged(0);
 		}
 	}
 

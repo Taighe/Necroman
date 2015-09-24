@@ -14,6 +14,9 @@ namespace nLEVELDATA
 		public bool[] collectedSouls;
 		public bool medal;
 		public string levelName;
+		public string nextlevel;
+		public bool timeAttackMode;
+		public string trueLevelName;
 
 		// Use this for initialization
 		void Awake () 

@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using nDATACONTROL;
 
 public class TitleManager : MonoBehaviour 
 {
 	public Animator m_anim;
+	public EventSystem m_eventSystem;
 
 	Button m_continue;
 
@@ -31,6 +33,7 @@ public class TitleManager : MonoBehaviour
 		if(m_anim != null) m_anim.SetBool ("Start", true);
 
 		gameObject.SetActive (false);
+		m_eventSystem.gameObject.SetActive (false);
 	}
 	
 	public void Continue()

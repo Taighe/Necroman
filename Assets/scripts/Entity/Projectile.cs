@@ -11,7 +11,7 @@ public class Projectile : Entity
 	{
 		if (collision.gameObject.tag == "Player") 
 		{
-			collision.gameObject.GetComponent<Entity>().Die ();
+			collision.gameObject.GetComponent<Entity>().Damaged(0);
 			Destroy(this.gameObject);
 		}
 

@@ -86,8 +86,7 @@ namespace nDATACONTROL
 				for(int i = 0; i < numOflevels; i++)
 				{
 					transform.GetChild(i).GetComponent<LevelData>().scoreSoulFragments = data.m_data[i].soulFragment; 
-					transform.GetChild(i).GetComponent<LevelData>().unlocked = data.m_data[i].unlocked; 
-					 
+					transform.GetChild(i).GetComponent<LevelData>().unlocked = data.m_data[i].unlocked;  
 				}
 
 				file.Close();

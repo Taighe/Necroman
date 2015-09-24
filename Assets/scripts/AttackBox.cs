@@ -7,11 +7,11 @@ namespace nATTACK
 {
 	public class AttackBox : MonoBehaviour 
 	{
-		float m_timer;
+		public float m_timer;
 
-		float m_attackFrame;
+		public float m_attackFrame;
 
-		float m_attackLength;
+		public float m_attackLength;
 
 		int m_damage;
 
@@ -22,11 +22,14 @@ namespace nATTACK
 
 		void Start()
 		{
-		
+			m_timer = 0;
 		}
 
-		void OnTriggerEnter2D(Collider2D collision)
+		void OnTriggerStay2D(Collider2D collision)
 		{
+			if (m_timer < m_attackFrame)
+				return;
+
 			if (collision.gameObject.tag == "Remnant") 
 			{
 				GameObject _obj = collision.gameObject;
@@ -53,7 +56,7 @@ namespace nATTACK
 
 				GameObject _owner = m_owner;
 
-				Player _player = m_owner.GetComponent<Player>();;
+				Player _player = m_owner.GetComponent<Player>();
 
 				if(_entity.m_team != m_team)
 				{
@@ -88,7 +91,7 @@ namespace nATTACK
 		{
 			m_timer = Time.time;
 			m_attackFrame = attackFrame;
-			m_attackLength = attackLength + Time.time;
+			m_attackLength = attackLength;
 			m_damage = damage;
 			m_team = owner;
 		}
@@ -97,7 +100,7 @@ namespace nATTACK
 		{
 			m_timer = Time.time;
 			m_attackFrame = attackFrame;
-			m_attackLength = attackLength + Time.time;
+			m_attackLength = attackLength;
 			m_damage = damage;
 			m_team = owner;
 			m_owner = origin;

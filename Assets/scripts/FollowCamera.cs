@@ -83,15 +83,14 @@ namespace nFOLLOWCAMERA
 
 			Translate (_pos, _dest);
 
-			StayWithBounds (ref _pos, ref oldPos);
-
 			transform.position = new Vector3(_pos.x, _pos.y, layerZ);
 
+			StayWithBounds (ref _pos, oldPos);
 		}
 
-		bool StayWithBounds(ref Vector2 currentPosition, ref Vector3 oldPosition)
+		bool StayWithBounds(ref Vector2 currentPosition, Vector3 oldPosition)
 		{
-			if (cameraBounds != null) 
+			if (cameraBounds != null)
 			{
 				Rect _bounds = GetComponent<Camera>().pixelRect;
 				Rect worldBounds = cameraBounds.GetComponent<CameraBounds> ().bounds;
@@ -100,15 +99,17 @@ namespace nFOLLOWCAMERA
 				Vector2 camWorldMax = GetComponent<Camera> ().ScreenToWorldPoint (_bounds.max);
 				
 				//Check if the camera is outside the worlds camera bounds
-				if ( !(camWorldMin.x > worldBounds.min.x && camWorldMax.x < worldBounds.max.x))
+				if ( !(camWorldMin.x >= worldBounds.min.x && camWorldMax.x <= worldBounds.max.x))
 				{
 					currentPosition.x = oldPosition.x;
 				} 
 				
-				if( !(camWorldMin.y > worldBounds.min.y && camWorldMax.y < worldBounds.max.y))
+				if( !(camWorldMin.y >= worldBounds.min.y && camWorldMax.y <= worldBounds.max.y))
 				{
 					currentPosition.y = oldPosition.y;
 				}
+
+				transform.position = new Vector3(currentPosition.x, currentPosition.y, layerZ);
 
 				return true;
 			}

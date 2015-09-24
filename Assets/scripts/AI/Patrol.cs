@@ -21,11 +21,10 @@ public class Patrol : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		if (Scene.paused == true)
-			return;
-
-		AiPatrol ();
-
+		if (Scene.paused == false) 
+		{
+			AiPatrol ();
+		}
 	}
 
 	void OnDrawGizmos()
@@ -62,11 +61,9 @@ public class Patrol : MonoBehaviour
 			}
 
 			_vel.x = speed * (int)_facing;
-			GetComponent <Entity> ().m_facing = _facing;
 		}
 
 		_entity.m_rigid2D.velocity = _vel;
-
 	}
 
 	void switchTarget()

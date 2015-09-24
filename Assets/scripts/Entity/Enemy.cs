@@ -39,6 +39,7 @@ public class Enemy : Entity
 	// Update is called once per frame
 	void Update () 
 	{
+		GetComponent<Entity> ().Update ();
 		if (m_state == State.DEATH) 
 		{
 			if(IsRESPAWNING )
@@ -67,6 +68,12 @@ public class Enemy : Entity
 				}
 			}
 		}
+
+		if (m_velocity.x > 0)
+			m_facing = Facing.RIGHT;
+
+		if (m_velocity.x < 0)
+			m_facing = Facing.LEFT;
 
 		ChangeInFacing ();
 	}

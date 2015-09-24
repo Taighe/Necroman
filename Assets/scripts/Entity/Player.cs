@@ -19,7 +19,8 @@ public enum AnimationState
 	ATTACK_DOWN = 6,
 	LAND = 7,
 	LOOK_UP = 8,
-	LOOK_DOWN = 9
+	LOOK_DOWN = 9,
+	EXIT = 10
 }
 
 public class Player : Entity 
@@ -117,8 +118,7 @@ public class Player : Entity
 	// Update is called once per frame
 	void Update() 
 	{
-		Entity _entity = GetComponent<Entity> ();
-		_entity.Update ();
+		GetComponent<Entity> ().Update ();
 
 		m_remnantCount = m_remnants.Count;
 
@@ -282,7 +282,12 @@ public class Player : Entity
 		m_velocity.y = boost;
 		m_rigid2D.velocity = m_velocity;
 	}
-	
+
+	public void Exit()
+	{
+		m_animator.SetInteger ("State", (int)AnimationState.EXIT);
+	}
+
 	void ResetRemenants()
 	{
 		for(int i = 0; i < m_remnants.Count; i++)
@@ -334,7 +339,7 @@ public class Player : Entity
 
 			//Instatiate AttackBox Object
 			_obj.transform.SetParent(transform);
-			_obj.GetComponent<AttackBox> ().SetAttack (0.3f, 0.3f, 1, Team.PLAYER, this.gameObject);
+			_obj.GetComponent<AttackBox> ().SetAttack (0, 0.7f, 1, Team.PLAYER, this.gameObject);
 
 			Vector3 _pos = new Vector3(transform.position.x + (offsetX * (float)m_facing), transform.position.y + offsetY, transform.position.z);
 			_obj.transform.position = _pos;
@@ -356,14 +361,22 @@ public class Player : Entity
 
 	public override void Damaged(int damage)
 	{
-		Die ();
+		if (damage == 0) 
+		{
+			Die (true);
+		} 
+		else 
+		{
+			Die (false);
+		}
+
 	}
 
-	public override void Die()
+	public void Die(bool createPlatform)
 	{
 		SetState (State.DEATH, ref m_state);
 		m_deathTimer = Time.time + recoverTime;
-
+		
 		for(int i = 0; i < m_remnants.Count; i++)
 		{
 			if(m_remnants[i] == null)
@@ -371,19 +384,19 @@ public class Player : Entity
 				m_remnants.RemoveAt(i);
 			}
 		}
-
+		
 		Vector3 remPos = transform.position;
 		remPos.y += remnantSpawnOffsetY;
-
-		if(m_collision.gameObject.tag != "Character" && m_remnants.Count < maxRemnants)
+		
+		if(createPlatform && m_remnants.Count < maxRemnants)
 		{
 			GameObject _obj = (GameObject)Instantiate(p_remnant, remPos, transform.rotation);
 			m_remnants.Add (_obj.gameObject);
-
+			
 		}
-
+		
 		Vector3 _pos = new Vector3(m_checkPoint.x, m_checkPoint.y, 0);
-
+		
 		GetComponent<Translation> ().SetTranslate (transform.position, _pos);
 		Instantiate (deathExplosion, transform.position, transform.rotation);
 	}
@@ -469,11 +482,14 @@ public class Player : Entity
 
 		AnimatorStateInfo _state = m_animator.GetCurrentAnimatorStateInfo (0);
 
-		if(Input.GetButtonDown ("Attack")) 
+		if(Input.GetButtonDown ("Attack") ) 
 		{
 			m_animState = AnimationState.ATTACK;
-		} 
 
+			if(Input.GetAxis("Vertical") < 0) m_animState = AnimationState.ATTACK_DOWN;
+
+			if(Input.GetAxis("Vertical") > 0) m_animState = AnimationState.ATTACK_UP;
+		} 
 
 		m_animator.SetInteger ("State", (int)m_animState);
 

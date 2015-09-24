@@ -128,7 +128,7 @@ namespace nENTITY
 			return false;
 		}
 
-		public bool IsPaused () 
+		public virtual bool IsPaused () 
 		{
 			if (Scene.paused == true) 
 			{

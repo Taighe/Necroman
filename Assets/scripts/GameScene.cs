@@ -19,6 +19,8 @@ namespace nSCENE
 
 		DataControl data;
 
+		float startTime;
+
 		void Awake()
 		{
 			if(gameScene == null)
@@ -27,6 +29,7 @@ namespace nSCENE
 			}
 
 			s_levelTime = levelTime;
+			startTime = Time.time;
 
 			currentSoulFragments = DataControl.control.levelData.scoreSoulFragments;
 			if(DataControl.control.levelData.collectedSouls.Length == 0)
@@ -40,9 +43,6 @@ namespace nSCENE
 				_collectables.transform.GetChild(i).GetComponent<Collectable>().IsCollected = DataControl.control.levelData.collectedSouls[i];
 			}
 
-			//data = GameObject.Find (dataLink).GetComponent<LevelData> ();
-
-			//data.unlocked = true;
 		}
 		
 		// Update is called once per frame
@@ -52,10 +52,9 @@ namespace nSCENE
 				return;
 
 			levelTime = s_levelTime;
-			levelTime += 0.5f * Time.smoothDeltaTime;
+			levelTime = Time.time - startTime;
 
 			s_levelTime = levelTime;
-
 		}
 
 		public static void AddLevelTime(float time)
@@ -72,7 +71,6 @@ namespace nSCENE
 		{
 			Scene.paused = false;
 			Scene.buttonPressed = true;
-
 		}
 		
 		public void Quit()

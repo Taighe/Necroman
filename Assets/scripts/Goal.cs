@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using nDATACONTROL;
+using nLEVELDATA;
 using nSCENE;
 using nCOLLECTABLE;
 
@@ -37,8 +38,18 @@ public class Goal : MonoBehaviour
 				DataControl.control.levelData.collectedSouls[i] = _collectable.transform.GetChild(i).GetComponent<Collectable>().IsCollected;
 			}
 
-			DataControl.control.Save();
+			if(DataControl.control.levelData.nextlevel != "")
+			{
+				LevelData _lastlevel = DataControl.control.levelData;
+				DataControl.control.levelData = GameObject.Find(DataControl.control.levelData.nextlevel).GetComponent<LevelData>();
+				DataControl.control.levelData.unlocked = true;
+				DataControl.control.levelData = _lastlevel;
+			}
+
+			DataControl.control.levelData.timeAttackMode = true;
 			
+			DataControl.control.Save();
+
 			Application.LoadLevel(scene);
 		}
 
@@ -57,6 +68,7 @@ public class Goal : MonoBehaviour
 		{
 			m_timer += Time.deltaTime * 1.0f;
 			GameScene.gameScene.player.GetComponent<Player>().disableControl = true;
+			GameScene.gameScene.player.GetComponent<Player>().Exit();
 		}
 
 		EndLevel();

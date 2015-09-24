@@ -7,7 +7,7 @@ public class LevelSelector : MonoBehaviour
 {
 	Translation m_translation;
 	LevelSelect m_level;
-	public EventSystem m_event; 
+	public EventSystem m_event;
 	public float speed;
 	public GameObject worldCanvas;
 
@@ -45,5 +45,10 @@ public class LevelSelector : MonoBehaviour
 		currentPos = Vector3.Lerp (m_origin, _target.transform.position, distanceCovered);
 		transform.position = currentPos;
 		m_lastTarget = _target;
+	}
+
+	public void LoadLevel()
+	{
+		Application.LoadLevel (DataControl.control.levelData.trueLevelName);
 	}
 }
