@@ -10,6 +10,7 @@ public class LevelSelector : MonoBehaviour
 	public EventSystem m_event;
 	public float speed;
 	public GameObject worldCanvas;
+	public GameObject modeSelect;
 
 	Vector3 m_origin;
 	float m_startTime;
@@ -31,10 +32,20 @@ public class LevelSelector : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
+		if (Input.GetButtonDown ("Cancel")) 
+		{
+			worldCanvas.SetActive(true);
+			modeSelect.SetActive(false);
+			m_event.SetSelectedGameObject(m_lastTarget);
+		}
+
 		float delta = Time.time - m_startTime;  
 		float distanceCovered = delta / speed; 
 		Vector3 currentPos = transform.position;
 		GameObject _target = m_event.currentSelectedGameObject;
+
+		if (worldCanvas.activeInHierarchy == false)
+			return;
 
 		if(currentPos == _target.transform.position)
 		{
@@ -45,6 +56,7 @@ public class LevelSelector : MonoBehaviour
 		currentPos = Vector3.Lerp (m_origin, _target.transform.position, distanceCovered);
 		transform.position = currentPos;
 		m_lastTarget = _target;
+
 	}
 
 	public void LoadLevel()
