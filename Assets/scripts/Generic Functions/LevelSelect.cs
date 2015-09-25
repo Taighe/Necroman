@@ -48,7 +48,7 @@ public class LevelSelect : MonoBehaviour
 		_timeAttack.interactable = m_data.timeAttackMode;
 		canvas.transform.GetChild (0).gameObject.SetActive (true);
 		DataControl.control.levelData = m_data;
-		transform.parent.gameObject.SetActive (false);
+		m_event.gameObject.SetActive (false);
 	}
 
 }

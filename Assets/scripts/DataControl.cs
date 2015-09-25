@@ -54,7 +54,7 @@ namespace nDATACONTROL
 		public bool Save()
 		{
 			BinaryFormatter bf = new BinaryFormatter();
-			FileStream file = File.Open (Application.persistentDataPath + "/save.dat", FileMode.Create);
+			FileStream file = File.Open ("/save.dat", FileMode.Create);
 
 			SaveData data = new SaveData ();
 
@@ -76,10 +76,10 @@ namespace nDATACONTROL
 
 		public bool Load()
 		{
-			if (File.Exists (Application.persistentDataPath + "/save.dat")) 
+			if (File.Exists ("/save.dat")) 
 			{
 				BinaryFormatter bf = new BinaryFormatter();
-				FileStream file = File.Open (Application.persistentDataPath + "/save.dat", FileMode.Open);
+				FileStream file = File.Open ("/save.dat", FileMode.Open);
 				
 				SaveData data = (SaveData)bf.Deserialize(file);
 
@@ -99,7 +99,7 @@ namespace nDATACONTROL
 
 		public bool GetSaveData()
 		{
-			if (File.Exists (Application.persistentDataPath + "/save.dat"))
+			if (File.Exists ("/save.dat"))
 				return true;
 
 			return false;
@@ -107,9 +107,9 @@ namespace nDATACONTROL
 
 		public bool Delete()
 		{
-			if (File.Exists (Application.persistentDataPath + "/save.dat"))
+			if (File.Exists ("/save.dat"))
 			{
-				File.Delete(Application.persistentDataPath + "/save.dat");
+				File.Delete("/save.dat");
 				return true;
 			}
 
