@@ -33,7 +33,7 @@ public class GUIManager : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		m_clock.SetActive (nDATACONTROL.DataControl.control.levelData.timeAttackMode);
+		//m_clock.SetActive (nDATACONTROL.DataControl.control.levelData.timeAttackMode);
 		float _levelTimeData = GameScene.gameScene.levelTime - startTime;
 
 		if (_levelTimeData >= 60)

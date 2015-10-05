@@ -29,6 +29,7 @@ public class Player : Entity
 	public GameObject p_remnant;
 	public GameObject p_attack;
 	public GameObject p_deathEffect;
+	public Object p_soul;
 	public bool disableControl;
 	public GameObject deathExplosion;
 
@@ -51,7 +52,9 @@ public class Player : Entity
 	GameObject pickUp;
 
 	float jumpForce;
-	
+
+	GameObject m_remnantGuide;
+
 	Vector2 m_lastCheckPoint;
 	Vector2 m_checkPoint;
 
@@ -77,6 +80,25 @@ public class Player : Entity
 			m_lastCheckPoint = new Vector2(collision.transform.position.x, collision.transform.position.y);
 		}
 
+		if (collision.gameObject.tag == "Remnant Guide") 
+		{
+			m_remnantGuide = collision.gameObject;
+		}
+
+	}
+
+	void OnTriggerExit2D(Collider2D collision)
+	{
+		if (collision.gameObject.tag == "Checkpoint") 
+		{
+			m_lastCheckPoint = new Vector2(collision.transform.position.x, collision.transform.position.y);
+		}
+		
+		if (collision.gameObject.tag == "Remnant Guide") 
+		{
+			m_remnantGuide = null;
+		}
+		
 	}
 
 	void OnCollisionStay2D(Collision2D collision)
@@ -245,16 +267,20 @@ public class Player : Entity
 		m_velocity.x = Input.GetAxis ("Horizontal") * speed;
 
 		//Camera actions
-		if (IsOnGround () && m_velocity.x == 0) 
+		FollowCamera _camera = FollowCamera.control;
+		if (_camera != null) 
 		{
-			FollowCamera.control.offsetY = Input.GetAxis ("Vertical") * peekOffsetY;
-		}
-		else
-			FollowCamera.control.offsetY = 0;
+			if (IsOnGround () && m_velocity.x == 0) 
+			{
+				FollowCamera.control.offsetY = Input.GetAxis ("Vertical") * peekOffsetY;
+			} 
+			else
+				FollowCamera.control.offsetY = 0;
 
-		if(IsAttacking() && IsOnGround() )
-		{
-			m_velocity.x = 0;
+			if (IsAttacking () && IsOnGround ()) 
+			{
+				m_velocity.x = 0;
+			}
 		}
 
 		if(Input.GetAxis ("Horizontal") < 0) m_facing = Facing.LEFT;
@@ -275,6 +301,11 @@ public class Player : Entity
 		
 		jumpForce = minJump + m_time * (maxJump - minJump);
 		m_velocity.y = jumpForce;
+	}
+
+	public void AddRemnant(GameObject remnant)
+	{
+		m_remnants.Add (remnant);
 	}
 
 	public void Hop(float boost)
@@ -384,17 +415,14 @@ public class Player : Entity
 				m_remnants.RemoveAt(i);
 			}
 		}
-		
-		Vector3 remPos = transform.position;
-		remPos.y += remnantSpawnOffsetY;
-		
-		if(createPlatform && m_remnants.Count < maxRemnants)
+
+		if (m_remnantGuide != null && m_remnantCount < maxRemnants) 
 		{
-			GameObject _obj = (GameObject)Instantiate(p_remnant, remPos, transform.rotation);
-			m_remnants.Add (_obj.gameObject);
-			
+			GameObject soul = (GameObject)Instantiate(p_soul, transform.position, transform.rotation);
+			soul.GetComponent<SoulParticle>().SetTarget(m_remnantGuide);
+			soul.gameObject.tag = "Soul";
 		}
-		
+
 		Vector3 _pos = new Vector3(m_checkPoint.x, m_checkPoint.y, 0);
 		
 		GetComponent<Translation> ().SetTranslate (transform.position, _pos);

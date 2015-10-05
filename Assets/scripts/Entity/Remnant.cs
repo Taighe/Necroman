@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using nENTITY;
+using nSCENE;
 
 namespace nREMNANT
 {
@@ -26,7 +27,8 @@ namespace nREMNANT
 
 		public override void Die()
 		{
-			Instantiate (soulParticle, transform.position, transform.rotation);
+			GameObject soul = (GameObject)Instantiate (soulParticle, transform.position, transform.rotation);
+			soul.GetComponent<SoulParticle> ().SetTarget (GameScene.gameScene.player);
 			Destroy (this.gameObject);
 		}
 	}
