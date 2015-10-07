@@ -30,25 +30,6 @@ namespace nATTACK
 			if (m_timer < m_attackFrame)
 				return;
 
-			if (collision.gameObject.tag == "Remnant") 
-			{
-				GameObject _obj = collision.gameObject;
-				if(_obj.GetComponent<Entity>().m_team != m_team)
-				{
-					Destroy((GameObject)_obj);
-					_obj.GetComponent<Entity>().IsDestroyed = true;
-
-					if(m_owner.tag == "Player") 
-					{
-						GameScene.gameScene.player.GetComponent<Player>().ResizeRemnantArray();
-					}
-
-					Instantiate(explosion, transform.position, transform.rotation);
-					Destroy(this.gameObject);
-
-				}
-			}
-
 			if (collision.gameObject.tag != "Terrain") 
 			{
 				Entity _entity = collision.gameObject.GetComponent<Entity>();
@@ -73,7 +54,7 @@ namespace nATTACK
 
 					_entity.GetComponent<Entity>().Damaged(m_damage);
 					Instantiate(explosion, transform.position, transform.rotation);
-					Destroy(this.gameObject);
+					Destroy(gameObject);
 				}
 			}
 

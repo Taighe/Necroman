@@ -27,8 +27,6 @@ public class Turret : Entity
 
 		m_timer += 1.0f * Time.deltaTime;
 
-		m_light.intensity = m_timer;
-
 		if(CanFire() )
 		{
 			GameObject _obj = (GameObject)Instantiate(projectile, transform.position, transform.rotation);

@@ -4,8 +4,11 @@ using nDATACONTROL;
 
 public class pax_remnantGuide : MonoBehaviour 
 {
-	void OnTriggerEnter2D(Collider2D collider)
-	{
+	public GameObject m_remnant;
 
+	void OnTriggerStay2D(Collider2D collider)
+	{
+		if (collider.gameObject.tag == "Remnant")
+			m_remnant = collider.gameObject;
 	}
 }

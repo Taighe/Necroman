@@ -48,8 +48,12 @@ namespace nSCENE
 		// Update is called once per frame
 		void Update () 
 		{
-			if (Scene.paused)
+			if (Scene.paused) 
+			{
+				Time.timeScale = 0;
 				return;
+			}
+			else Time.timeScale = 1;
 
 			levelTime = s_levelTime;
 			levelTime = Time.time - startTime;
@@ -67,16 +71,5 @@ namespace nSCENE
 			return s_levelTime;
 		}
 
-		public void Resume()
-		{
-			Scene.paused = false;
-			Scene.buttonPressed = true;
-		}
-		
-		public void Quit()
-		{
-			Scene.paused = false;
-			Application.LoadLevel("levelSelectMenu_wip00");
-		}
 	}
 }

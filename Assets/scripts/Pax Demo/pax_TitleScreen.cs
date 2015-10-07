@@ -16,8 +16,7 @@ public class pax_TitleScreen : MonoBehaviour
 	{
 		if (Input.GetButtonDown ("Submit")) 
 		{
-			introCall.PlayIntro();
-			gameObject.SetActive(false);
+            Application.LoadLevel("lvl1_area1");
 		}
 	}
 }

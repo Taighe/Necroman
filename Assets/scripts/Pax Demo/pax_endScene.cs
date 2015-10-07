@@ -16,6 +16,10 @@ public class pax_endScene : MonoBehaviour
 	void Update () 
 	{
 		timer += 1.0f *Time.deltaTime;
+
+		if (Input.GetButtonDown ("Submit"))
+			Application.LoadLevel ("splash_screen");
+
 		if (timer > delay) 
 		{
 			Application.LoadLevel("lvl1_area1");

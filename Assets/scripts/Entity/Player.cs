@@ -48,6 +48,8 @@ public class Player : Entity
 
 	public Rect m_respawnArea;
 
+	public int m_lives;
+
 	GameObject interactable;
 	GameObject pickUp;
 
@@ -127,7 +129,7 @@ public class Player : Entity
 	void Start()
 	{
 		m_animator = GetComponent<Animator> ();
-
+		m_lives = maxRemnants;
 		m_animator.SetInteger ("State", startAnim);
 		m_respawnArea = new Rect (transform.position, new Vector2(15.0f, 15.0f) );
 		m_remnants = new ArrayList ();
@@ -153,6 +155,7 @@ public class Player : Entity
 		{
 			case State.ALIVE:
 			{
+				m_velocity.x = 0;
 				if(disableControl == false) 
 				{
 					Controls ();
@@ -218,26 +221,26 @@ public class Player : Entity
 
 		Scene.buttonPressed = false;
 
-		if(Input.GetButton("Interact"))
-		{
-			if(pickUp == null)
-			{
-				pickUp = interactable;
-				pickUp.transform.parent = transform;
-			}
-		}
+        //if(Input.GetButton("Interact"))
+        //{
+        //    if(pickUp == null)
+        //    {
+        //        pickUp = interactable;
+        //        pickUp.transform.parent = transform;
+        //    }
+        //}
 
-		if(Input.GetButtonDown("Attack"))
-		{
-			if(pickUp == null)
-			{
-				Attack ();
-			}
-			else
-			{
-				Throw ();
-			}
-		}
+        if (Input.GetButtonDown("Attack"))
+        {
+            if (pickUp == null)
+            {
+                Attack();
+            }
+            else
+            {
+                Throw();
+            }
+        }
 
 		if(Input.GetButtonDown("Reset"))
 		{
@@ -264,8 +267,17 @@ public class Player : Entity
 		}
 
 		//Movement
-		m_velocity.x = Input.GetAxis ("Horizontal") * speed;
-
+        if (Input.GetAxis("Horizontal") > 0)
+        {
+            m_velocity.x = speed;
+        }
+        else if (Input.GetAxis("Horizontal") < 0)
+        {
+            m_velocity.x = -speed;
+        }
+        else if (Input.GetAxis("Horizontal") == 0)
+            m_velocity.x = 0;
+            
 		//Camera actions
 		FollowCamera _camera = FollowCamera.control;
 		if (_camera != null) 
@@ -368,9 +380,9 @@ public class Player : Entity
 		{
 			GameObject _obj = (GameObject)Instantiate (p_attack, transform.position, new Quaternion(0, 0, offsetY, 1) );
 
-			//Instatiate AttackBox Object
+			//Instantiate AttackBox Object
 			_obj.transform.SetParent(transform);
-			_obj.GetComponent<AttackBox> ().SetAttack (0, 0.7f, 1, Team.PLAYER, this.gameObject);
+			_obj.GetComponent<AttackBox> ().SetAttack (0, 0.55f, 1, Team.PLAYER, this.gameObject);
 
 			Vector3 _pos = new Vector3(transform.position.x + (offsetX * (float)m_facing), transform.position.y + offsetY, transform.position.z);
 			_obj.transform.position = _pos;
@@ -416,12 +428,22 @@ public class Player : Entity
 			}
 		}
 
-		if (m_remnantGuide != null && m_remnantCount < maxRemnants) 
+		if(m_lives > 0)
 		{
 			GameObject soul = (GameObject)Instantiate(p_soul, transform.position, transform.rotation);
-			soul.GetComponent<SoulParticle>().SetTarget(m_remnantGuide);
-			soul.gameObject.tag = "Soul";
+			soul.gameObject.tag = "SoulCollect";
+			if (m_remnantGuide != null && m_remnantGuide.GetComponent<pax_remnantGuide>().m_remnant == null) 
+			{
+				soul.GetComponent<SoulParticle>().SetTarget(m_remnantGuide);
+				soul.gameObject.tag = "Soul";
+			}
 		}
+
+        m_lives -= 1;
+        if(m_lives < 0)
+        {
+            m_lives = 0;
+        }
 
 		Vector3 _pos = new Vector3(m_checkPoint.x, m_checkPoint.y, 0);
 		
@@ -487,6 +509,12 @@ public class Player : Entity
 			m_animState = AnimationState.RUN;
 		}
 
+        if (Looking() < 0 && IsOnGround() && m_velocity.x == 0)
+        {
+            m_animState = AnimationState.LOOK_DOWN;
+        }
+        else if (Looking() > 0 && IsOnGround() && m_velocity.x == 0) m_animState = AnimationState.LOOK_UP;
+
 		if(Landed ())
 		{
 			m_animState = AnimationState.LAND;
@@ -502,26 +530,33 @@ public class Player : Entity
 			m_animState = AnimationState.FALL;
 		}
 	
-		if(Looking() < 0 && m_velocity.x == 0)
-		{
-			m_animState = AnimationState.LOOK_DOWN;
-		}
-		else if(Looking() > 0 && m_velocity.x == 0) m_animState = AnimationState.LOOK_UP;
-
 		AnimatorStateInfo _state = m_animator.GetCurrentAnimatorStateInfo (0);
 
-		if(Input.GetButtonDown ("Attack") ) 
-		{
-			m_animState = AnimationState.ATTACK;
+        if (Input.GetButtonDown("Attack"))
+        {
+            m_animState = AnimationState.ATTACK;
+            m_animator.SetLayerWeight(1, 1);
 
-			if(Input.GetAxis("Vertical") < 0) m_animState = AnimationState.ATTACK_DOWN;
+            if (Input.GetAxis("Vertical") < 0) m_animState = AnimationState.ATTACK_DOWN;
 
-			if(Input.GetAxis("Vertical") > 0) m_animState = AnimationState.ATTACK_UP;
-		} 
+            if (Input.GetAxis("Vertical") > 0) m_animState = AnimationState.ATTACK_UP;
+        } 
+       
+        if(IsAttacking() == false)
+        {
+            m_animator.SetLayerWeight(1, 0);
+        }
 
 		m_animator.SetInteger ("State", (int)m_animState);
 
 	}
+
+    public void AddSouls(int value)
+    {
+        if (m_lives >= maxRemnants) return;
+        
+        m_lives += value;
+    }
 
 	public bool RespawnSignal()
 	{

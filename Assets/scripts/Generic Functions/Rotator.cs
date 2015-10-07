@@ -25,8 +25,8 @@ public class Rotator : MonoBehaviour
 
 		transform.localRotation.ToAngleAxis (out angle, out axis);
 
-		angle += speed * Time.deltaTime;
+		angle += speed;
 
-		transform.RotateAround (transform.position, rotateAxis, speed);
+		transform.RotateAround (transform.position, rotateAxis, speed * Time.deltaTime);
 	}
 }

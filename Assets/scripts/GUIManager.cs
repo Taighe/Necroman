@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿
+using UnityEngine;
 using System.Collections;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -9,8 +10,11 @@ public class GUIManager : MonoBehaviour
 	public Text m_soulFragment;
 	public GameObject m_pauseMenu;
 	public Image m_lives;
-	Player m_player;
 	public GameObject m_clock;
+	public GameObject m_controlsMenu;
+	public GameObject m_currentMenu;
+	
+	Player m_player;
 	EventSystem m_event;
 	float startTime;
 
@@ -24,6 +28,25 @@ public class GUIManager : MonoBehaviour
 		//m_soulFragment = transform.GetChild (3).GetComponent<Text> ();
 	}
 
+	public void Resume()
+	{
+		Scene.paused = false;
+		Scene.buttonPressed = true;
+	}
+	
+	public void Controls()
+	{
+		m_pauseMenu.SetActive (false);
+		m_currentMenu = m_controlsMenu;
+	}
+	
+	public void Quit()
+	{
+		Scene.paused = false;
+		Scene.buttonPressed = true;
+		Application.LoadLevel("splash_screen");
+	}
+
 	// Use this for initialization
 	void Start () 
 	{
@@ -34,6 +57,13 @@ public class GUIManager : MonoBehaviour
 	void Update () 
 	{
 		//m_clock.SetActive (nDATACONTROL.DataControl.control.levelData.timeAttackMode);
+
+		if (m_currentMenu == m_controlsMenu && Input.GetButtonDown("Cancel")) 
+		{
+			m_currentMenu = m_pauseMenu;
+			m_controlsMenu.SetActive(false);
+		}
+
 		float _levelTimeData = GameScene.gameScene.levelTime - startTime;
 
 		if (_levelTimeData >= 60)
@@ -44,8 +74,10 @@ public class GUIManager : MonoBehaviour
 		m_clock.GetComponent<Text> ().text = _time;
 
 		m_soulFragment.text = "" + GameScene.gameScene.currentSoulFragments + "/ 10";
-		m_pauseMenu.SetActive(Scene.paused);
-		int currentLives = m_player.maxRemnants - m_player.m_remnantCount;
+		m_currentMenu.SetActive(Scene.paused);
+		int currentLives = m_player.m_lives;
 		m_lives.rectTransform.sizeDelta = new Vector2 (currentLives * 2, 2);
 	}
+
+
 }

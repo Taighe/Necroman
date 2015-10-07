@@ -29,7 +29,7 @@ namespace nREMNANT
 		{
 			GameObject soul = (GameObject)Instantiate (soulParticle, transform.position, transform.rotation);
 			soul.GetComponent<SoulParticle> ().SetTarget (GameScene.gameScene.player);
-			Destroy (this.gameObject);
+			Destroy (gameObject);
 		}
 	}
 }

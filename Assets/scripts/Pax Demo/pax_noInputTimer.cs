@@ -7,7 +7,7 @@ public class pax_noInputTimer : MonoBehaviour
 	public float delay;
 
 	string[] m_buttons;
-	int m_size = 8;
+	int m_size = 7;
 
 	// Use this for initialization
 	void Start () 
@@ -20,7 +20,6 @@ public class pax_noInputTimer : MonoBehaviour
 		m_buttons[4] = "Cancel";
 		m_buttons[5] = "Reanimate";
 		m_buttons[6] = "Pause";
-		m_buttons[7] = "Peek";
 	}
 	
 	// Update is called once per frame
@@ -29,7 +28,7 @@ public class pax_noInputTimer : MonoBehaviour
 		timer += 1.0f * Time.deltaTime;
 
 		if (timer >= delay)
-			Application.LoadLevel ("lvl1_area1");
+			Application.LoadLevel ("splash_screen");
 
 		if (Input.GetAxis ("Horizontal") != 0 || Input.GetAxis ("Vertical") != 0)
 		{
