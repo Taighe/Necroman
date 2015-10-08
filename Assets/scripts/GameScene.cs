@@ -12,6 +12,7 @@ namespace nSCENE
 		public static GameScene gameScene;
 		public int totalSoulFragments;
 		public int currentSoulFragments;
+		public GameObject currentCheckpoint;
 
 		public GameObject player;
 
@@ -32,6 +33,7 @@ namespace nSCENE
 			startTime = Time.time;
 
 			currentSoulFragments = DataControl.control.levelData.scoreSoulFragments;
+
 			if(DataControl.control.levelData.collectedSouls.Length == 0)
 			{
 				DataControl.control.levelData.collectedSouls = new bool[totalSoulFragments];
@@ -56,9 +58,14 @@ namespace nSCENE
 			else Time.timeScale = 1;
 
 			levelTime = s_levelTime;
-			levelTime = Time.time - startTime;
+			levelTime -= Time.deltaTime;
 
 			s_levelTime = levelTime;
+
+			if (levelTime <= 0) 
+			{
+				Application.LoadLevel("end_screen");
+			}
 		}
 
 		public static void AddLevelTime(float time)

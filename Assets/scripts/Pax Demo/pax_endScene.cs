@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using nSCENE;
 
 public class pax_endScene : MonoBehaviour 
 {
@@ -9,7 +10,8 @@ public class pax_endScene : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
-	
+		Scene.paused = false;
+		Time.timeScale = 1;
 	}
 	
 	// Update is called once per frame
@@ -18,11 +20,11 @@ public class pax_endScene : MonoBehaviour
 		timer += 1.0f *Time.deltaTime;
 
 		if (Input.GetButtonDown ("Submit"))
-			Application.LoadLevel ("splash_screen");
+			Application.LoadLevel ("company_screen");
 
 		if (timer > delay) 
 		{
-			Application.LoadLevel("lvl1_area1");
+			Application.LoadLevel("company_screen");
 		}
 	}
 }

@@ -50,7 +50,7 @@ public class GUIManager : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
-		startTime = 0;
+		startTime = GameScene.gameScene.levelTime;
 	}
 	
 	// Update is called once per frame
@@ -64,13 +64,10 @@ public class GUIManager : MonoBehaviour
 			m_controlsMenu.SetActive(false);
 		}
 
-		float _levelTimeData = GameScene.gameScene.levelTime - startTime;
-
-		if (_levelTimeData >= 60)
-			startTime = GameScene.gameScene.levelTime;
+		int _seconds = (int)(GameScene.gameScene.levelTime % 60.0f);
 
 		int _minutes = (int)GameScene.gameScene.levelTime / 60;
-		string _time = string.Format("{0:00}:{1:00}", _minutes, _levelTimeData);
+		string _time = string.Format("{0:00}:{1:00}", _minutes, _seconds);
 		m_clock.GetComponent<Text> ().text = _time;
 
 		m_soulFragment.text = "" + GameScene.gameScene.currentSoulFragments + "/ 10";

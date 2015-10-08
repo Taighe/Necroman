@@ -28,7 +28,7 @@ public class pax_noInputTimer : MonoBehaviour
 		timer += 1.0f * Time.deltaTime;
 
 		if (timer >= delay)
-			Application.LoadLevel ("splash_screen");
+			Application.LoadLevel ("end_screen");
 
 		if (Input.GetAxis ("Horizontal") != 0 || Input.GetAxis ("Vertical") != 0)
 		{

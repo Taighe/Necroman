@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using nSCENE;
 
 public class pax_TitleScreen : MonoBehaviour 
 {
@@ -8,7 +9,8 @@ public class pax_TitleScreen : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
-
+		Scene.paused = false;
+		Time.timeScale = 1;
 	}
 	
 	// Update is called once per frame

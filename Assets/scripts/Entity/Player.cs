@@ -43,6 +43,8 @@ public class Player : Entity
 	public float recoverTime;
 	public float boostJump;
 	public float peekOffsetY;
+	public float peekDelay;
+	public float peekTimer;
 
 	public int m_remnantCount;
 
@@ -80,6 +82,8 @@ public class Player : Entity
 		if (collision.gameObject.tag == "Checkpoint") 
 		{
 			m_lastCheckPoint = new Vector2(collision.transform.position.x, collision.transform.position.y);
+			GameScene.gameScene.currentCheckpoint = collision.gameObject;
+			GameScene.gameScene.currentCheckpoint.GetComponent<CheckPoint>().Activate();
 		}
 
 		if (collision.gameObject.tag == "Remnant Guide") 
@@ -284,10 +288,20 @@ public class Player : Entity
 		{
 			if (IsOnGround () && m_velocity.x == 0) 
 			{
-				FollowCamera.control.offsetY = Input.GetAxis ("Vertical") * peekOffsetY;
+				if(Input.GetAxis ("Vertical") != 0)
+				{
+					peekTimer += 1.0f * Time.deltaTime;
+				}
+				else peekTimer = 0;
 			} 
 			else
 				FollowCamera.control.offsetY = 0;
+
+
+			if(peekTimer >= peekDelay)
+			{
+				FollowCamera.control.offsetY = Looking() * peekOffsetY;
+			}
 
 			if (IsAttacking () && IsOnGround ()) 
 			{
@@ -298,7 +312,7 @@ public class Player : Entity
 		if(Input.GetAxis ("Horizontal") < 0) m_facing = Facing.LEFT;
 		if(Input.GetAxis ("Horizontal") > 0) m_facing = Facing.RIGHT;
 	}
-
+	
 	void TimedJump()
 	{
 		if (m_time >= 1.0f) 
