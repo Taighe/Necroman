@@ -12,7 +12,6 @@ public class SoulParticle : MonoBehaviour
 	void Start () 
 	{
 		m_translate = GetComponent<Translation> ();
-		m_translate.m_timer = 0;
 	}
 
 	public void SetTarget(GameObject target)
@@ -38,7 +37,9 @@ public class SoulParticle : MonoBehaviour
 
 		m_translate.SetTranslate (transform.position, _pos);
 
-		if (m_translate.Translate () >= m_translate.speed) 
+		m_translate.Translate ();
+
+		if (m_translate.AtDestination()) 
 		{
 			if(gameObject.tag == "Soul")
 			{

@@ -22,6 +22,8 @@ namespace nSCENE
 
 		float startTime;
 
+		bool m_isGameOver = false;
+
 		void Awake()
 		{
 			if(gameScene == null)
@@ -53,7 +55,6 @@ namespace nSCENE
 			if (Scene.paused) 
 			{
 				Time.timeScale = 0;
-				return;
 			}
 			else Time.timeScale = 1;
 
@@ -64,6 +65,7 @@ namespace nSCENE
 
 			if (levelTime <= 0) 
 			{
+				Time.timeScale = 1;
 				Application.LoadLevel("end_screen");
 			}
 		}
@@ -78,5 +80,14 @@ namespace nSCENE
 			return s_levelTime;
 		}
 
+		public void SetGameOver()
+		{
+			m_isGameOver = true;
+		}
+
+		public bool IsGameOver()
+		{
+			return m_isGameOver;
+		}
 	}
 }

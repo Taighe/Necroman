@@ -5,19 +5,32 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using nSCENE;
 
+public enum GUIState
+{
+	PAUSED,
+	GAMEOVER
+}
+
 public class GUIManager : MonoBehaviour 
 {
 	public Text m_soulFragment;
 	public GameObject m_pauseMenu;
 	public Image m_lives;
 	public GameObject m_clock;
-	public GameObject m_controlsMenu;
+	public GameObject m_gameOverMenu;
+	public GameObject m_controlMenu;
 	public GameObject m_currentMenu;
+	public GameObject m_hud;
+	public EventSystem m_eventSystem; 
 	
 	Player m_player;
 	EventSystem m_event;
 	float startTime;
+	GUIState m_guiState;
 
+	delegate void GUI();
+	GUI m_gui;
+	
 	void Awake()
 	{
 		//m_clock = transform.GetChild (0).gameObject;
@@ -36,8 +49,12 @@ public class GUIManager : MonoBehaviour
 	
 	public void Controls()
 	{
-		m_pauseMenu.SetActive (false);
-		m_currentMenu = m_controlsMenu;
+		m_currentMenu = m_controlMenu;
+	}
+
+	public void Retry()
+	{
+		Application.LoadLevel ("lvl1_area1");
 	}
 	
 	public void Quit()
@@ -56,25 +73,41 @@ public class GUIManager : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		//m_clock.SetActive (nDATACONTROL.DataControl.control.levelData.timeAttackMode);
+		HUD ();
+		ControlsMenu ();
 
-		if (m_currentMenu == m_controlsMenu && Input.GetButtonDown("Cancel")) 
+		m_pauseMenu.SetActive(Scene.paused);
+
+		if(GameScene.gameScene.IsGameOver() )
 		{
-			m_currentMenu = m_pauseMenu;
-			m_controlsMenu.SetActive(false);
+			m_currentMenu = m_gameOverMenu;
+			//m_eventSystem.SetSelectedGameObject(m_currentMenu.transform.GetChild(1).gameObject);
 		}
+	}
 
+	void HUD()
+	{
 		int _seconds = (int)(GameScene.gameScene.levelTime % 60.0f);
-
+		
 		int _minutes = (int)GameScene.gameScene.levelTime / 60;
 		string _time = string.Format("{0:00}:{1:00}", _minutes, _seconds);
 		m_clock.GetComponent<Text> ().text = _time;
+		
+		m_soulFragment.text = "" + GameScene.gameScene.currentSoulFragments + "/10";
 
-		m_soulFragment.text = "" + GameScene.gameScene.currentSoulFragments + "/ 10";
-		m_currentMenu.SetActive(Scene.paused);
 		int currentLives = m_player.m_lives;
 		m_lives.rectTransform.sizeDelta = new Vector2 (currentLives * 2, 2);
 	}
 
-
+	void ControlsMenu()
+	{
+		if (m_currentMenu == m_controlMenu) 
+		{
+			if(Input.GetButtonDown("Cancel"))
+			{
+				m_currentMenu = m_hud;
+			}
+		}
+	}
+	
 }

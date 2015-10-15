@@ -5,6 +5,11 @@ using nSCENE;
 public class pax_TitleScreen : MonoBehaviour 
 {
 	public Intro introCall;
+	public AudioSource source;
+	public AudioClip sfx;
+	public float timer;
+	public float delay;
+	bool play;
 
 	// Use this for initialization
 	void Start () 
@@ -18,7 +23,7 @@ public class pax_TitleScreen : MonoBehaviour
 	{
 		if (Input.GetButtonDown ("Submit")) 
 		{
-            Application.LoadLevel("lvl1_area1");
+			Application.LoadLevel("controls_screen");
 		}
 	}
 }

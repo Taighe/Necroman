@@ -21,7 +21,6 @@ public class Goal : MonoBehaviour
 			if(Input.GetAxis("Vertical") > 0 )
 			{
 				m_IsOpen = true;
-				m_animator.SetBool("Open", true);
 			}
 		}
 	}
@@ -32,21 +31,21 @@ public class Goal : MonoBehaviour
 		{
 			DataControl.control.levelData.scoreSoulFragments = GameScene.gameScene.currentSoulFragments;
 			GameObject _collectable = GameScene.gameScene.gameObject.transform.GetChild (1).gameObject;
-
+//
 			for (int i = 0; i < GameScene.gameScene.totalSoulFragments; i++) 
 			{
 				DataControl.control.levelData.collectedSouls[i] = _collectable.transform.GetChild(i).GetComponent<Collectable>().IsCollected;
 			}
+//
+//			if(DataControl.control.levelData.nextlevel != "")
+//			{
+//				LevelData _lastlevel = DataControl.control.levelData;
+//				DataControl.control.levelData = GameObject.Find(DataControl.control.levelData.nextlevel).GetComponent<LevelData>();
+//				DataControl.control.levelData.unlocked = true;
+//				DataControl.control.levelData = _lastlevel;
+//			}
 
-			if(DataControl.control.levelData.nextlevel != "")
-			{
-				LevelData _lastlevel = DataControl.control.levelData;
-				DataControl.control.levelData = GameObject.Find(DataControl.control.levelData.nextlevel).GetComponent<LevelData>();
-				DataControl.control.levelData.unlocked = true;
-				DataControl.control.levelData = _lastlevel;
-			}
-
-			DataControl.control.levelData.timeAttackMode = true;
+			//DataControl.control.levelData.timeAttackMode = true;
 			
 			DataControl.control.Save();
 
@@ -66,11 +65,16 @@ public class Goal : MonoBehaviour
 	{
 		if (m_IsOpen == true) 
 		{
-			m_timer += Time.deltaTime * 1.0f;
+			m_timer += Time.deltaTime;
 			GameScene.gameScene.player.GetComponent<Player>().disableControl = true;
 			GameScene.gameScene.player.GetComponent<Player>().Exit();
 		}
 
 		EndLevel();
 	}
+
+    public void OpenDoor()
+    {
+        m_animator.SetBool("Open", true);
+    }
 }

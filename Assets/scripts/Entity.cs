@@ -21,6 +21,7 @@ namespace nENTITY
 	{
 		ALIVE = 0,
 		DEATH,
+		WIN,
 	}
 
 	public class Entity : MonoBehaviour 

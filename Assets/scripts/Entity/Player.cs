@@ -20,7 +20,8 @@ public enum AnimationState
 	LAND = 7,
 	LOOK_UP = 8,
 	LOOK_DOWN = 9,
-	EXIT = 10
+	EXIT = 10,
+	WIN = 11,
 }
 
 public class Player : Entity 
@@ -29,6 +30,7 @@ public class Player : Entity
 	public GameObject p_remnant;
 	public GameObject p_attack;
 	public GameObject p_deathEffect;
+    public GameObject p_portalCheckPoint;
 	public Object p_soul;
 	public bool disableControl;
 	public GameObject deathExplosion;
@@ -52,6 +54,10 @@ public class Player : Entity
 
 	public int m_lives;
 
+	public AudioSource source;
+	public AudioClip sfxJump;
+	public AudioClip sfxDeath;
+
 	GameObject interactable;
 	GameObject pickUp;
 
@@ -59,12 +65,15 @@ public class Player : Entity
 
 	GameObject m_remnantGuide;
 
-	Vector2 m_lastCheckPoint;
 	Vector2 m_checkPoint;
+
+	//ArrayList m_checkpoints;
 
 	bool JUMPKEYRELEASED = false;
 	bool JUMPINITIATED = false;
 	bool JUMPAPEX = false;
+	bool TRUEDEATH = false;
+    bool WINSEQUENCE = false;
 	
 	float m_time;
 	float m_deathTimer;
@@ -76,14 +85,19 @@ public class Player : Entity
 	
 	GameObject m_attack;
 
+    GameObject m_portalCheckPoint = null;
+
 	//Collisions
 	void OnTriggerEnter2D(Collider2D collision)
 	{
 		if (collision.gameObject.tag == "Checkpoint") 
 		{
-			m_lastCheckPoint = new Vector2(collision.transform.position.x, collision.transform.position.y);
+			m_checkPoint = new Vector2(collision.transform.position.x, collision.transform.position.y - 0.5f);
+			//m_checkpoints.Insert(0, (Vector2)m_checkPoint);
+
 			GameScene.gameScene.currentCheckpoint = collision.gameObject;
 			GameScene.gameScene.currentCheckpoint.GetComponent<CheckPoint>().Activate();
+            if(m_portalCheckPoint != null) Destroy(m_portalCheckPoint);
 		}
 
 		if (collision.gameObject.tag == "Remnant Guide") 
@@ -95,10 +109,6 @@ public class Player : Entity
 
 	void OnTriggerExit2D(Collider2D collision)
 	{
-		if (collision.gameObject.tag == "Checkpoint") 
-		{
-			m_lastCheckPoint = new Vector2(collision.transform.position.x, collision.transform.position.y);
-		}
 		
 		if (collision.gameObject.tag == "Remnant Guide") 
 		{
@@ -127,7 +137,6 @@ public class Player : Entity
 		{
 			interactable = null;
 		}
-
 	}
 
 	void Start()
@@ -135,12 +144,12 @@ public class Player : Entity
 		m_animator = GetComponent<Animator> ();
 		m_lives = maxRemnants;
 		m_animator.SetInteger ("State", startAnim);
-		m_respawnArea = new Rect (transform.position, new Vector2(15.0f, 15.0f) );
+		m_respawnArea = new Rect ( );
 		m_remnants = new ArrayList ();
 		m_animState = AnimationState.IDLE;
 		m_attack = null;
-		m_lastCheckPoint = new Vector2(transform.position.x, transform.position.y);
-		SetState (State.ALIVE, ref m_state);
+		//m_checkpoints = new ArrayList ();
+		SetState (m_state, ref m_state);
 	}
 
 	// Update is called once per frame
@@ -154,26 +163,32 @@ public class Player : Entity
 		if (IsPaused() )
 			return;
 
+
+		if (Input.GetButtonDown ("Pause") && Scene.buttonPressed == false) 
+		{
+			Scene.paused = true;
+			return;
+		}
+		
+		Scene.buttonPressed = false;
+
 		//State machine
 		switch (m_state) 
 		{
 			case State.ALIVE:
 			{
 				m_velocity.x = 0;
-				if(disableControl == false) 
+				if (disableControl == false) 
 				{
 					Controls ();
-					AnimationControl();
+					AnimationControl ();
 				}
 				
-				ChangeInFacing();
+				ChangeInFacing ();
 
 				m_rigid2D.velocity = m_velocity;
-				
-				//Keep track of last remnant for respawn
-				m_checkPoint = m_lastCheckPoint;	
 
-				if(m_remnants.Count > 0)
+				if (m_remnants.Count > 0) 
 				{
 					//GameObject _lastRemnant = (GameObject)m_remnants[m_remnants.Count - 1];
 					//m_checkPoint = new Vector2(_lastRemnant.transform.position.x, _lastRemnant.transform.position.y - remnantSpawnOffsetY * 2);
@@ -186,23 +201,34 @@ public class Player : Entity
 
 			case State.DEATH:
 			{
-				Vector2 _pos = new Vector2(transform.position.x, transform.position.y);	
-				
-				if(Time.time >= m_deathTimer)
+				if (TRUEDEATH) 
 				{
-					if(GetComponent<Translation>().Translate() >= 1)
+					GameScene.gameScene.SetGameOver ();
+					return;
+				}
+
+				Vector2 _pos = new Vector2 (transform.position.x, transform.position.y);	
+				
+				if (Time.time >= m_deathTimer) 
+				{
+					GetComponent<Translation>().Translate();
+					if (GetComponent<Translation> ().AtDestination()) 
 					{
-						GetComponent<Translation>().m_timer = 0;
-						SetState(State.ALIVE, ref m_state);
+						SetState (State.ALIVE, ref m_state);
 					}
 				}	
 
 				break;
 			}
 
+			case State.WIN:
+			{
+                Win();
+				break;
+			}
 		}
 	}
-
+	
 	void Jump()
 	{
 		JUMPINITIATED = true;
@@ -215,15 +241,26 @@ public class Player : Entity
 		return (int)Input.GetAxis ("Vertical");
 	}
 
+	void Win()
+	{
+       //Initiate win sequence when the player is on the ground
+        if (IsOnGround() && WINSEQUENCE == false)
+        {
+            WINSEQUENCE = true;
+            m_rigid2D.isKinematic = true;
+
+        }
+
+        if (WINSEQUENCE )
+        {
+            m_animator.SetInteger("State", 3);
+            GetComponent<Translation>().Translate();
+        }
+	
+	}
+
 	void Controls()
 	{
-		if (Input.GetButtonDown ("Pause") && Scene.buttonPressed == false) 
-		{
-			Scene.paused = true;
-			return;
-		}
-
-		Scene.buttonPressed = false;
 
         //if(Input.GetButton("Interact"))
         //{
@@ -257,6 +294,7 @@ public class Player : Entity
 		if (Input.GetButtonDown ("Jump") && _ground )
 		{
 			Jump ();
+			source.PlayOneShot(sfxJump);
 		}
 
 		if (Input.GetButton ("Jump") == true && JUMPINITIATED == true && JUMPKEYRELEASED == false)
@@ -353,6 +391,9 @@ public class Player : Entity
 			_obj.GetComponent<Entity>().Die();
 		}
 
+        if (m_remnants.Count > 0)
+            m_portalCheckPoint = (GameObject)Instantiate(p_portalCheckPoint, transform.position, transform.rotation);
+
 		m_remnants.Clear ();
 	}
 
@@ -433,7 +474,9 @@ public class Player : Entity
 	{
 		SetState (State.DEATH, ref m_state);
 		m_deathTimer = Time.time + recoverTime;
-		
+
+		source.PlayOneShot (sfxDeath);
+
 		for(int i = 0; i < m_remnants.Count; i++)
 		{
 			if(m_remnants[i] == null)
@@ -454,28 +497,45 @@ public class Player : Entity
 		}
 
         m_lives -= 1;
-        if(m_lives < 0)
-        {
-            m_lives = 0;
-        }
-
-		Vector3 _pos = new Vector3(m_checkPoint.x, m_checkPoint.y, 0);
-		
-		GetComponent<Translation> ().SetTranslate (transform.position, _pos);
 		Instantiate (deathExplosion, transform.position, transform.rotation);
+       
+		if(m_lives < 0)
+        {
+			TRUEDEATH = true;
+			return;
+        }
+        
+        Vector2 _currentCheckpoint = m_checkPoint;
+
+        if (m_portalCheckPoint != null)
+        {
+            _currentCheckpoint = m_portalCheckPoint.transform.position;
+        }
+		
+
+		//Set Translation for respawn
+		Vector3 _target = new Vector3(_currentCheckpoint.x, _currentCheckpoint.y, 0);
+		
+		GetComponent<Translation> ().SetTranslate (transform.position, _target);
+
+		m_remnantGuide = null;
+        Destroy(m_portalCheckPoint);
+
 	}
 
-	bool SetState(State state, ref State address)
+	public bool SetState(State state, ref State address)
 	{
 		ParticleSystem _particle = GetComponentInChildren<ParticleSystem>();
 		BoxCollider2D _box = GetComponent<BoxCollider2D>();
 		SpriteRenderer _sprite = GetComponent<SpriteRenderer> ();
+        m_state = state;
 
 		switch (state) 
 		{
 			case State.ALIVE:
 			{
-				_sprite.enabled = true;
+                WINSEQUENCE = false;
+                _sprite.enabled = true;
 				_particle.emissionRate = 0;
 				_box.enabled = true;
 				m_rigid2D.isKinematic = false;
@@ -490,16 +550,28 @@ public class Player : Entity
 					pickUp = null;
 				}
 				
+				JUMPINITIATED = true;
+
 				if(m_attack != null) Destroy(m_attack.gameObject);
 				
-				_particle.emissionRate = 15;
+				_particle.emissionRate = 50;
 				_box.enabled = false;
 				_sprite.enabled = false;
-				Vector2 vel = Vector2.zero;
-				m_rigid2D.velocity = vel;
+				//Vector2 vel = Vector2.zero;
+				//m_rigid2D.velocity = vel;
 				m_rigid2D.isKinematic = true;
 				address = state;
+				m_animator.SetInteger("State", 7);
 				return true; 
+			}
+			case State.WIN:
+			{
+                disableControl = true;
+                Vector2 vel = Vector2.zero;
+                m_rigid2D.velocity = vel;
+                GetComponent<Translation>().SetTranslationValues(1.0f, new Vector2(1.0f, 1.0f), 1.0f, new Vector2(0.1f, 0.1f));
+				
+                return true; 
 			}
 		}
 

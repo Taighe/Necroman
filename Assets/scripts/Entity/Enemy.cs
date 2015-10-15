@@ -44,12 +44,12 @@ public class Enemy : Entity
 		{
 			if(IsRESPAWNING )
 			{
-				if(m_translate.Translate() >= 1)
-				{
-					IsRESPAWNING = false;
-					SetState(State.ALIVE, ref m_state);
-					m_translate.m_timer = 0;
-				}
+//				if(m_translate.Translate() >= 1)
+//				{
+//					IsRESPAWNING = false;
+//					SetState(State.ALIVE, ref m_state);
+//					m_translate.m_timer = 0;
+//				}
 
 				return;
 			}
