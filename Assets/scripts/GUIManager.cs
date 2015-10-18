@@ -21,7 +21,8 @@ public class GUIManager : MonoBehaviour
 	public GameObject m_controlMenu;
 	public GameObject m_currentMenu;
 	public GameObject m_hud;
-	public EventSystem m_eventSystem; 
+	public EventSystem m_eventSystem;
+    public Text m_score;
 	
 	Player m_player;
 	EventSystem m_event;
@@ -94,6 +95,9 @@ public class GUIManager : MonoBehaviour
 		m_clock.GetComponent<Text> ().text = _time;
 		
 		m_soulFragment.text = "" + GameScene.gameScene.currentSoulFragments + "/10";
+
+        string _score = GameScene.gameScene.score.ToString("00000");
+        m_score.text = "" + _score;
 
 		int currentLives = m_player.m_lives;
 		m_lives.rectTransform.sizeDelta = new Vector2 (currentLives * 2, 2);

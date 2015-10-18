@@ -17,17 +17,17 @@ namespace nLEVELDATA
 		public string nextlevel;
 		public bool timeAttackMode;
 		public string trueLevelName;
+        public int score;
 
-		// Use this for initialization
-		void Awake () 
-		{
+        void OnLevelWasLoaded(int index)
+        {
+            if (index == 0) 
+            {
+                scoreSoulFragments = 0;
+                collectedSouls = new bool[10];
+            }
+            
+        }
 
-		}
-
-		// Update is called once per frame
-		void Update () 
-		{
-
-		}
 	}
 }

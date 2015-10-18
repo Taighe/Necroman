@@ -40,6 +40,7 @@ public class Player : Entity
 	public float speed;
 	public float minJump;
 	public float maxJump;
+    public float maxSpeed;
 	public float remnantSpawnOffsetY;
 	
 	public float recoverTime;
@@ -85,7 +86,9 @@ public class Player : Entity
 	
 	GameObject m_attack;
 
-    GameObject m_portalCheckPoint = null;
+    public GameObject m_portalCheckPoint = null;
+
+    Vector2 m_portalVelocity;
 
 	//Collisions
 	void OnTriggerEnter2D(Collider2D collision)
@@ -97,10 +100,18 @@ public class Player : Entity
 
 			GameScene.gameScene.currentCheckpoint = collision.gameObject;
 			GameScene.gameScene.currentCheckpoint.GetComponent<CheckPoint>().Activate();
-            if(m_portalCheckPoint != null) Destroy(m_portalCheckPoint);
+            //if(m_portalCheckPoint != null) Destroy(m_portalCheckPoint);
 		}
+        
+        if (collision.gameObject.tag == "SoulPortal")
+        {
+            m_portalCheckPoint = collision.gameObject;
 
-		if (collision.gameObject.tag == "Remnant Guide") 
+            m_portalCheckPoint.GetComponent<SoulPortal>().RememberForce(m_velocity);
+            //if(m_portalCheckPoint != null) Destroy(m_portalCheckPoint);
+        }
+
+		if (collision.gameObject.tag == "RemnantGuide") 
 		{
 			m_remnantGuide = collision.gameObject;
 		}
@@ -110,7 +121,7 @@ public class Player : Entity
 	void OnTriggerExit2D(Collider2D collision)
 	{
 		
-		if (collision.gameObject.tag == "Remnant Guide") 
+		if (collision.gameObject.tag == "RemnantGuide") 
 		{
 			m_remnantGuide = null;
 		}
@@ -177,7 +188,7 @@ public class Player : Entity
 		{
 			case State.ALIVE:
 			{
-				m_velocity.x = 0;
+
 				if (disableControl == false) 
 				{
 					Controls ();
@@ -186,14 +197,6 @@ public class Player : Entity
 				
 				ChangeInFacing ();
 
-				m_rigid2D.velocity = m_velocity;
-
-				if (m_remnants.Count > 0) 
-				{
-					//GameObject _lastRemnant = (GameObject)m_remnants[m_remnants.Count - 1];
-					//m_checkPoint = new Vector2(_lastRemnant.transform.position.x, _lastRemnant.transform.position.y - remnantSpawnOffsetY * 2);
-				}
-				
 				m_respawnArea.center = transform.position;
 				
 				break;
@@ -228,7 +231,32 @@ public class Player : Entity
 			}
 		}
 	}
-	
+
+    void FixedUpdate()
+    {
+        //Movement
+        if (Input.GetAxis("Horizontal") > 0)
+        {
+            //m_velocity.x = speed;
+            m_rigid2D.AddForce(new Vector2(speed, 0), ForceMode2D.Force);
+        }
+        else if (Input.GetAxis("Horizontal") < 0)
+        {
+            //m_velocity.x = -speed;
+            m_rigid2D.AddForce(new Vector2(-speed, 0), ForceMode2D.Force);
+        }
+        
+        Vector2 _vel = m_velocity;
+
+        if (m_rigid2D.velocity.x < -maxSpeed)
+            _vel.x = -maxSpeed;
+
+        if (m_rigid2D.velocity.x > maxSpeed)
+            _vel.x = maxSpeed;
+
+        m_rigid2D.velocity = _vel;
+    }
+
 	void Jump()
 	{
 		JUMPINITIATED = true;
@@ -308,18 +336,6 @@ public class Player : Entity
 			JUMPINITIATED = false;
 		}
 
-		//Movement
-        if (Input.GetAxis("Horizontal") > 0)
-        {
-            m_velocity.x = speed;
-        }
-        else if (Input.GetAxis("Horizontal") < 0)
-        {
-            m_velocity.x = -speed;
-        }
-        else if (Input.GetAxis("Horizontal") == 0)
-            m_velocity.x = 0;
-            
 		//Camera actions
 		FollowCamera _camera = FollowCamera.control;
 		if (_camera != null) 
@@ -343,7 +359,7 @@ public class Player : Entity
 
 			if (IsAttacking () && IsOnGround ()) 
 			{
-				m_velocity.x = 0;
+				//m_velocity.x = 0;
 			}
 		}
 
@@ -391,9 +407,12 @@ public class Player : Entity
 			_obj.GetComponent<Entity>().Die();
 		}
 
-        if (m_remnants.Count > 0)
-            m_portalCheckPoint = (GameObject)Instantiate(p_portalCheckPoint, transform.position, transform.rotation);
-
+        //if (m_remnants.Count > 0)
+        //{
+        //    m_portalCheckPoint = (GameObject)Instantiate(p_portalCheckPoint, transform.position, transform.rotation);
+        //    m_portalVelocity = GetComponent<Rigidbody2D>().velocity;
+        //}
+            
 		m_remnants.Clear ();
 	}
 
@@ -488,11 +507,16 @@ public class Player : Entity
 		if(m_lives > 0)
 		{
 			GameObject soul = (GameObject)Instantiate(p_soul, transform.position, transform.rotation);
-			soul.gameObject.tag = "SoulCollect";
+
+            soul.gameObject.tag = "Soul";
+            //soul.GetComponent<SoulParticle>().SetTarget(gameObject);
+
+            GameObject _portal = m_portalCheckPoint;
+            m_portalCheckPoint = null;
 			if (m_remnantGuide != null && m_remnantGuide.GetComponent<pax_remnantGuide>().m_remnant == null) 
 			{
-				soul.GetComponent<SoulParticle>().SetTarget(m_remnantGuide);
-				soul.gameObject.tag = "Soul";
+                m_portalCheckPoint = _portal;
+                soul.GetComponent<SoulParticle>().SetTarget(m_remnantGuide);		
 			}
 		}
 
@@ -512,14 +536,13 @@ public class Player : Entity
             _currentCheckpoint = m_portalCheckPoint.transform.position;
         }
 		
-
 		//Set Translation for respawn
 		Vector3 _target = new Vector3(_currentCheckpoint.x, _currentCheckpoint.y, 0);
 		
 		GetComponent<Translation> ().SetTranslate (transform.position, _target);
 
 		m_remnantGuide = null;
-        Destroy(m_portalCheckPoint);
+       // Destroy(m_portalCheckPoint);
 
 	}
 
@@ -540,6 +563,14 @@ public class Player : Entity
 				_box.enabled = true;
 				m_rigid2D.isKinematic = false;
 				address = state;
+                Vector2 _force = Vector2.zero;
+               
+                if(m_portalCheckPoint != null) _force = m_portalCheckPoint.GetComponent<SoulPortal>().force;
+             
+                m_rigid2D.AddForce(_force, ForceMode2D.Impulse);
+
+                m_collisionNormals = new Vector2(0, 0);
+
 				return true; 
 			}
 			case State.DEATH:
@@ -557,8 +588,8 @@ public class Player : Entity
 				_particle.emissionRate = 50;
 				_box.enabled = false;
 				_sprite.enabled = false;
-				//Vector2 vel = Vector2.zero;
-				//m_rigid2D.velocity = vel;
+				Vector2 vel = Vector2.zero;
+				m_rigid2D.velocity = vel;
 				m_rigid2D.isKinematic = true;
 				address = state;
 				m_animator.SetInteger("State", 7);
@@ -569,7 +600,7 @@ public class Player : Entity
                 disableControl = true;
                 Vector2 vel = Vector2.zero;
                 m_rigid2D.velocity = vel;
-                GetComponent<Translation>().SetTranslationValues(1.0f, new Vector2(1.0f, 1.0f), 1.0f, new Vector2(0.1f, 0.1f));
+                GetComponent<Translation>().SetTranslationValues(1.0f, new Vector2(0.0f, 0.0f), 50.0f, new Vector2(1.0f, 1.0f));
 				
                 return true; 
 			}
@@ -606,7 +637,7 @@ public class Player : Entity
 			m_animState = AnimationState.LAND;
 		}
 
-		if (!IsOnGround() && m_velocity.y > 0) 
+		if (!IsOnGround() && m_velocity.y > 0)
 		{
 			m_animState = AnimationState.JUMP;
 		}

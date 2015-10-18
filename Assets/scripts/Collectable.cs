@@ -20,12 +20,20 @@ namespace nCOLLECTABLE
 
 		void OnTriggerEnter2D(Collider2D collision)
 		{
-			if(collision.gameObject.tag == "Player" && IsCollected == false)
+            if (collision.gameObject.tag == "Player" && IsCollected == false && m_type == Type.SOUL_FRAGMENT)
 			{
 				IsCollected = true;
 				GameScene.gameScene.currentSoulFragments += 1;
 				source.PlayOneShot(sfxCollect);
+                transform.GetChild(0).GetComponent<Animator>().SetBool("Collect", true);
 			}
+
+            if (collision.gameObject.tag == "Player" && IsCollected == false && m_type == Type.SOUL_SHARD)
+            {
+                IsCollected = true;
+                GameScene.gameScene.score += 10;
+                transform.GetChild(0).GetComponent<Animator>().SetBool("Collect", true);
+            }
 		}
 
 		// Use this for initialization
@@ -37,14 +45,10 @@ namespace nCOLLECTABLE
 		// Update is called once per frame
 		void Update () 
 		{
-			if(IsCollected && m_type == Type.SOUL_FRAGMENT)
-			{
-				transform.GetChild(0).gameObject.SetActive(false);
-				BoxCollider2D _box = GetComponent <BoxCollider2D>();
-
-				//transform.GetChild(0).GetComponent<Animator>().SetBool("Collected", true);
-				_box.enabled = false;
-			}
+            if (transform.GetChild(0).GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("End") )
+            {
+                transform.GetChild(0).gameObject.SetActive(false);
+            }
 		}
 	}
 }

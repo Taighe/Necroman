@@ -13,6 +13,8 @@ public class Fountain : MonoBehaviour
 	int m_count;
 	bool triggerWin = false;
 
+    public GameObject wall;
+
     delegate void WinSequence();
 
     WinSequence m_winSequence;
@@ -30,6 +32,7 @@ public class Fountain : MonoBehaviour
 			Player _player = GameScene.gameScene.player.GetComponent<Player>();
 			_player.SetState(nENTITY.State.WIN, ref _player.m_state);
 			triggerWin = true;
+            wall.SetActive(true);
 
 		}
 	}
@@ -69,7 +72,7 @@ public class Fountain : MonoBehaviour
         timer += Time.deltaTime;
         Player _player = GameScene.gameScene.player.GetComponent<Player>();
 
-        if (timer >= delay && m_count < 5/*GameScene.gameScene.currentSoulFragments*/)
+        if (timer >= delay && m_count < GameScene.gameScene.currentSoulFragments)
         {
             float radius = 15.0f;
             float _xRand = Random.RandomRange(-1.0f, 1.0f);
@@ -82,7 +85,7 @@ public class Fountain : MonoBehaviour
             m_count += 1;
         }
 
-        if (m_count >= 5) 
+        if (m_count >= GameScene.gameScene.currentSoulFragments) 
             m_winSequence = new WinSequence(Win3 );
     }
     void Win3()

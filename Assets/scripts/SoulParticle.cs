@@ -21,8 +21,9 @@ public class SoulParticle : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collider)
     {
-        if (gameObject.tag == "SoulCollect" && collider.gameObject.tag == "Player")
+        if (gameObject.tag == "Soul" && collider.gameObject.tag == "Player")
         {
+            gameObject.tag = "SoulCollect";
             SetTarget(collider.gameObject);
         }
     }
@@ -47,7 +48,7 @@ public class SoulParticle : MonoBehaviour
 				GameScene.gameScene.player.GetComponent<Player>().AddRemnant(_remnant);
 			}
 
-			if(m_target.gameObject.tag == "Player")
+            if (m_target.gameObject.tag == "Player" && gameObject.tag == "SoulCollect")
 			{
                 GameScene.gameScene.player.GetComponent<Player>().AddSouls(1);
 			}

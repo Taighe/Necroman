@@ -12,6 +12,7 @@ namespace nSCENE
 		public static GameScene gameScene;
 		public int totalSoulFragments;
 		public int currentSoulFragments;
+        public int score = 0;
 		public GameObject currentCheckpoint;
 
 		public GameObject player;
