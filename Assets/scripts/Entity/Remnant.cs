@@ -28,7 +28,7 @@ namespace nREMNANT
 		public override void Die()
 		{
 			GameObject soul = (GameObject)Instantiate (soulParticle, transform.position, transform.rotation);
-			soul.GetComponent<SoulParticle> ().SetTarget (GameScene.gameScene.player);
+			soul.GetComponent<SoulParticle> ().SetTarget (GameScene.gameScene.player, new Vector2(0,0));
 			Destroy (gameObject);
 		}
 	}

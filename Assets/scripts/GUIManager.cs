@@ -23,6 +23,7 @@ public class GUIManager : MonoBehaviour
 	public GameObject m_hud;
 	public EventSystem m_eventSystem;
     public Text m_score;
+    public Image m_vig;
 	
 	Player m_player;
 	EventSystem m_event;
@@ -55,7 +56,9 @@ public class GUIManager : MonoBehaviour
 
 	public void Retry()
 	{
-		Application.LoadLevel ("lvl1_area1");
+		Application.LoadLevel (GameScene.gameScene.sceneName);
+        Scene.paused = false;
+        Scene.buttonPressed = true;
 	}
 	
 	public void Quit()
@@ -69,6 +72,7 @@ public class GUIManager : MonoBehaviour
 	void Start () 
 	{
 		startTime = GameScene.gameScene.levelTime;
+        m_vig.color = Color.black;
 	}
 	
 	// Update is called once per frame
@@ -101,6 +105,16 @@ public class GUIManager : MonoBehaviour
 
 		int currentLives = m_player.m_lives;
 		m_lives.rectTransform.sizeDelta = new Vector2 (currentLives * 2, 2);
+       
+        Color red = new Color(1,0,0);
+        Color black = new Color(0, 0, 0);
+
+        m_vig.color = black;
+
+        if (currentLives <= 0)
+        {
+            m_vig.color = Color.Lerp(black, red, Mathf.Sin(Time.time * 3.5f));
+        }
 	}
 
 	void ControlsMenu()

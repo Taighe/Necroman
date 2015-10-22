@@ -14,6 +14,7 @@ namespace nSCENE
 		public int currentSoulFragments;
         public int score = 0;
 		public GameObject currentCheckpoint;
+        public string sceneName;
 
 		public GameObject player;
 

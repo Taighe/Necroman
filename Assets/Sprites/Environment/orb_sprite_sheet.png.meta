@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: 911a8192538d6504bb24ba3507433efe
-timeCreated: 1444797122
-licenseType: Pro
+timeCreated: 1445386263
+licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
     21300000: orb_sprite_sheet_0
@@ -39,7 +39,7 @@ TextureImporter:
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 1
+    enableMipMap: 0
     linearTexture: 0
     correctGamma: 0
     fadeOut: 0
@@ -184,8 +184,8 @@ TextureImporter:
     - name: orb_sprite_sheet_10
       rect:
         serializedVersion: 2
-        x: 64
-        y: 128
+        x: 0
+        y: 64
         width: 32
         height: 64
       alignment: 6
@@ -194,8 +194,8 @@ TextureImporter:
     - name: orb_sprite_sheet_11
       rect:
         serializedVersion: 2
-        x: 96
-        y: 128
+        x: 32
+        y: 64
         width: 32
         height: 64
       alignment: 6
@@ -204,8 +204,8 @@ TextureImporter:
     - name: orb_sprite_sheet_12
       rect:
         serializedVersion: 2
-        x: 128
-        y: 128
+        x: 64
+        y: 64
         width: 32
         height: 64
       alignment: 6
@@ -214,8 +214,8 @@ TextureImporter:
     - name: orb_sprite_sheet_13
       rect:
         serializedVersion: 2
-        x: 160
-        y: 128
+        x: 96
+        y: 64
         width: 32
         height: 64
       alignment: 6
@@ -224,8 +224,8 @@ TextureImporter:
     - name: orb_sprite_sheet_14
       rect:
         serializedVersion: 2
-        x: 192
-        y: 128
+        x: 128
+        y: 64
         width: 32
         height: 64
       alignment: 6
@@ -234,164 +234,14 @@ TextureImporter:
     - name: orb_sprite_sheet_15
       rect:
         serializedVersion: 2
-        x: 224
-        y: 128
+        x: 160
+        y: 64
         width: 32
         height: 64
       alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: orb_sprite_sheet_16
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 64
-        width: 32
-        height: 64
-      alignment: 6
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: orb_sprite_sheet_17
-      rect:
-        serializedVersion: 2
-        x: 32
-        y: 64
-        width: 32
-        height: 64
-      alignment: 6
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: orb_sprite_sheet_18
-      rect:
-        serializedVersion: 2
-        x: 64
-        y: 64
-        width: 32
-        height: 64
-      alignment: 6
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: orb_sprite_sheet_19
-      rect:
-        serializedVersion: 2
-        x: 96
-        y: 64
-        width: 32
-        height: 64
-      alignment: 6
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: orb_sprite_sheet_20
-      rect:
-        serializedVersion: 2
-        x: 128
-        y: 64
-        width: 32
-        height: 64
-      alignment: 6
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: orb_sprite_sheet_21
-      rect:
-        serializedVersion: 2
-        x: 160
-        y: 64
-        width: 32
-        height: 64
-      alignment: 6
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: orb_sprite_sheet_22
-      rect:
-        serializedVersion: 2
-        x: 192
-        y: 64
-        width: 32
-        height: 64
-      alignment: 6
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: orb_sprite_sheet_23
-      rect:
-        serializedVersion: 2
-        x: 224
-        y: 64
-        width: 32
-        height: 64
-      alignment: 6
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: orb_sprite_sheet_24
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 0
-        width: 32
-        height: 64
-      alignment: 6
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: orb_sprite_sheet_25
-      rect:
-        serializedVersion: 2
-        x: 32
-        y: 0
-        width: 32
-        height: 64
-      alignment: 6
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: orb_sprite_sheet_26
-      rect:
-        serializedVersion: 2
-        x: 64
-        y: 0
-        width: 32
-        height: 64
-      alignment: 6
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: orb_sprite_sheet_27
-      rect:
-        serializedVersion: 2
-        x: 96
-        y: 0
-        width: 32
-        height: 64
-      alignment: 6
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: orb_sprite_sheet_28
-      rect:
-        serializedVersion: 2
-        x: 128
-        y: 0
-        width: 32
-        height: 64
-      alignment: 6
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: orb_sprite_sheet_29
-      rect:
-        serializedVersion: 2
-        x: 160
-        y: 0
-        width: 32
-        height: 64
-      alignment: 6
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: orb_sprite_sheet_30
-      rect:
-        serializedVersion: 2
-        x: 192
-        y: 0
-        width: 32
-        height: 64
-      alignment: 6
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: orb_sprite_sheet_31
       rect:
         serializedVersion: 2
         x: 224

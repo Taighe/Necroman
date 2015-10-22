@@ -90,16 +90,19 @@ public class Player : Entity
 
     Vector2 m_portalVelocity;
 
+    Vector2 m_force;
+
 	//Collisions
 	void OnTriggerEnter2D(Collider2D collision)
 	{
 		if (collision.gameObject.tag == "Checkpoint") 
 		{
-			m_checkPoint = new Vector2(collision.transform.position.x, collision.transform.position.y - 0.5f);
+			m_checkPoint = new Vector2(collision.transform.position.x, collision.transform.position.y);
 			//m_checkpoints.Insert(0, (Vector2)m_checkPoint);
 
 			GameScene.gameScene.currentCheckpoint = collision.gameObject;
 			GameScene.gameScene.currentCheckpoint.GetComponent<CheckPoint>().Activate();
+            m_portalCheckPoint = null;
             //if(m_portalCheckPoint != null) Destroy(m_portalCheckPoint);
 		}
         
@@ -232,6 +235,16 @@ public class Player : Entity
 		}
 	}
 
+    public bool IsAlive()
+    {
+        if (m_state == State.ALIVE)
+        {
+            return true;
+        }
+            
+        return false;
+    }
+
     void FixedUpdate()
     {
         //Movement
@@ -254,7 +267,11 @@ public class Player : Entity
         if (m_rigid2D.velocity.x > maxSpeed)
             _vel.x = maxSpeed;
 
+        _vel += m_force;
+
         m_rigid2D.velocity = _vel;
+
+        m_force = new Vector2(0, 0);
     }
 
 	void Jump()
@@ -516,7 +533,8 @@ public class Player : Entity
 			if (m_remnantGuide != null && m_remnantGuide.GetComponent<pax_remnantGuide>().m_remnant == null) 
 			{
                 m_portalCheckPoint = _portal;
-                soul.GetComponent<SoulParticle>().SetTarget(m_remnantGuide);		
+                soul.GetComponent<SoulParticle>().SetTarget(m_remnantGuide, new Vector2(0,0));
+               
 			}
 		}
 
@@ -565,9 +583,8 @@ public class Player : Entity
 				address = state;
                 Vector2 _force = Vector2.zero;
                
-                if(m_portalCheckPoint != null) _force = m_portalCheckPoint.GetComponent<SoulPortal>().force;
-             
-                m_rigid2D.AddForce(_force, ForceMode2D.Impulse);
+                if(m_portalCheckPoint != null) 
+                    m_force = m_portalCheckPoint.GetComponent<SoulPortal>().force;
 
                 m_collisionNormals = new Vector2(0, 0);
 
