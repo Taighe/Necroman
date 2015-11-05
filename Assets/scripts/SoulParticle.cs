@@ -5,12 +5,14 @@ using nSCENE;
 public class SoulParticle : MonoBehaviour
 {
 	public GameObject remnant;
-	GameObject m_target;
+	public GameObject m_target;
 	Translation m_translate;
     Vector2 m_offset;
     Rect m_rect;
     public float size;
     bool m_collect = false;
+	public float timer;
+	public float delay;
 
 	// Use this for initialization
 	void Start () 
@@ -24,7 +26,8 @@ public class SoulParticle : MonoBehaviour
 	{
 		m_target = target;
         m_offset = offset;
-        if (m_target.gameObject.tag == "Player") gameObject.tag = "SoulCollect";
+        
+		if (m_target.gameObject.tag == "Player") gameObject.tag = "SoulCollect";
 	}
 
     void OnTriggerEnter2D(Collider2D collider)
@@ -53,7 +56,6 @@ public class SoulParticle : MonoBehaviour
         if (m_target == null)
 			return;
 
-
         Vector3 _offset = new Vector3(m_offset.x, m_offset.y, 0);
 		Vector3 _pos = m_target.transform.position + _offset;
 
@@ -67,6 +69,13 @@ public class SoulParticle : MonoBehaviour
             {
                 GameScene.gameScene.player.GetComponent<Player>().AddSouls(1);
                 m_collect = true;
+
+				timer += 1.0f * Time.deltaTime;
+
+				if(timer >= delay)
+				{
+					Destroy(gameObject);
+				}
             }
         }
 
@@ -74,7 +83,7 @@ public class SoulParticle : MonoBehaviour
 		{
             if (m_target.gameObject.tag == "RemnantGuide")
             {
-                GameObject _remnant = (GameObject)Instantiate(remnant, transform.position, transform.rotation);
+                GameObject _remnant = (GameObject)Instantiate(remnant, transform.GetChild(0).position, transform.rotation);
                 GameScene.gameScene.player.GetComponent<Player>().AddRemnant(_remnant);
             }
 

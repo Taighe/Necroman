@@ -12,9 +12,11 @@ namespace nSCENE
 		public static GameScene gameScene;
 		public int totalSoulFragments;
 		public int currentSoulFragments;
-        public int score = 0;
+        public int score;
 		public GameObject currentCheckpoint;
         public string sceneName;
+		public bool IsMidLevel;
+        public bool HasReset;
 
 		public GameObject player;
 
@@ -33,10 +35,13 @@ namespace nSCENE
 				gameScene = this;
 			}
 
+			levelTime = DataControl.control.levelData.time;
+
 			s_levelTime = levelTime;
 			startTime = Time.time;
 
 			currentSoulFragments = DataControl.control.levelData.scoreSoulFragments;
+            score = DataControl.control.levelData.score;
 
 			if(DataControl.control.levelData.collectedSouls.Length == 0)
 			{
@@ -85,6 +90,7 @@ namespace nSCENE
 		public void SetGameOver()
 		{
 			m_isGameOver = true;
+            DataControl.control.levelData.time = levelTime;
 		}
 
 		public bool IsGameOver()

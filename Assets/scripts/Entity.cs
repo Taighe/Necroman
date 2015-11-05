@@ -41,12 +41,12 @@ namespace nENTITY
 		protected Collision2D m_collision;
 		protected bool IsINTERACTABLE;
 
-
 		Facing m_lastFacing; 
 
 		float m_scaleX;
 
 		bool m_IsDestroyed;
+        bool m_ground;
 
 		public bool IsDestroyed
 		{
@@ -56,37 +56,41 @@ namespace nENTITY
 
 		public void OnCollisionStay2D(Collision2D collision)
 		{
-			Entity _entity = collision.gameObject.GetComponent<Entity> ();
-			
-			Vector2 norms = collision.contacts[0].normal;
+            //Entity _entity = collision.gameObject.GetComponent<Entity>();
 
-			if (_entity != null && _entity.IsPLATFORM && norms.y < 0) 
-			{
-				return;
-			}
+            //Vector2 norms = Vector2.zero;
+            //m_collisionNormals = Vector2.zero;
 
-			m_collisionNormals += norms;
+            //for (int i = 0; i < collision.contacts.Length; ++i)
+            //{
+            //    norms = collision.contacts[i].normal;
+            //    m_collisionNormals += norms;
+            //    m_collisionNormals.x = Mathf.Clamp(m_collisionNormals.x, -1.0f, 1.0f);
+            //    m_collisionNormals.y = Mathf.Clamp(m_collisionNormals.y, -1.0f, 1.0f);
 
-			m_collisionNormals.x = Mathf.Clamp (m_collisionNormals.x, -1.0f, 1.0f);
-			m_collisionNormals.y = Mathf.Clamp (m_collisionNormals.y, -1.0f, 1.0f);
+            //    Debug.DrawLine(collision.contacts[i].point, collision.contacts[i].point + collision.contacts[i].normal, Color.red);
+            //}
+            //Debug.DrawLine(transform.position, (transform.position + (Vector3)m_collisionNormals), Color.yellow);
+            
+            BoxCollider2D box = GetComponent<BoxCollider2D>();
+            Vector2 _sizeCast = new Vector2(0.5f, 1.0f);
 
+            if (box)
+            {
+                RaycastHit2D[] hits = Physics2D.BoxCastAll(transform.position, _sizeCast, 0, Vector2.down, 0.1f, 13);
+                if (hits != null && hits.Length > 0)
+                {
+                    m_ground = true;
+                }
+                else m_ground = false;
+            }
 		}
 
-		public void OnCollisionEnter2D(Collision2D collision)
-		{
-			m_collision = collision;
 
-			Entity _entity = collision.gameObject.GetComponent<Entity> ();
-			
-			Vector2 norms = collision.contacts[0].normal;
-
-			m_collisionNormals.y = norms.y;
-		}
 
 		public void OnCollisionExit2D(Collision2D collision)
 		{
-			m_collisionNormals = Vector2.zero;
-
+            m_ground = false;
 		}
 
 		public void OnTriggerExit2D(Collider2D collision)
@@ -104,6 +108,7 @@ namespace nENTITY
 			m_rigid2D = GetComponent<Rigidbody2D> ();
 			m_scaleX = transform.localScale.x;
 
+
 			Vector3 scale = transform.localScale;
 			scale.x = m_scaleX * (float)m_facing ;
 			transform.localScale = scale;
@@ -111,17 +116,12 @@ namespace nENTITY
 
 		public bool IsOnGround()
 		{
-			if(m_collisionNormals.y > 0)
-			{
-				return true;
-			}
-
-			return false;
+            return m_ground;
 		}
 
 		public bool Landed()
 		{
-			if(m_collisionNormals.y > 0 && m_lastFrameVelocity.y < 0)
+			if(!m_ground && m_lastFrameVelocity.y < 0)
 			{
 				return true;
 			}

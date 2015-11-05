@@ -18,13 +18,16 @@ namespace nLEVELDATA
 		public bool timeAttackMode;
 		public string trueLevelName;
         public int score;
+		public float time;
 
         void OnLevelWasLoaded(int index)
         {
-            if (index == 0) 
+            if (index == 1) 
             {
                 scoreSoulFragments = 0;
                 collectedSouls = new bool[10];
+				score = 0;
+                time = 301;
             }
             
         }

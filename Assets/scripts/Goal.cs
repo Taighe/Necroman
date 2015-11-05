@@ -11,6 +11,7 @@ public class Goal : MonoBehaviour
 	public float delay;
 	float m_timer;
 	bool m_IsOpen;
+    public bool m_isTransition;
 
 	Animator m_animator;
 
@@ -21,6 +22,7 @@ public class Goal : MonoBehaviour
 			if(Input.GetAxis("Vertical") > 0 )
 			{
 				m_IsOpen = true;
+                if (m_isTransition) OpenDoor();
 			}
 		}
 	}
@@ -30,6 +32,9 @@ public class Goal : MonoBehaviour
 		if(m_timer >= delay)
 		{
 			DataControl.control.levelData.scoreSoulFragments = GameScene.gameScene.currentSoulFragments;
+            DataControl.control.levelData.score = GameScene.gameScene.score;
+			DataControl.control.levelData.time = GameScene.gameScene.levelTime;
+
 			GameObject _collectable = GameScene.gameScene.gameObject.transform.GetChild (1).gameObject;
 //
 			for (int i = 0; i < GameScene.gameScene.totalSoulFragments; i++) 
@@ -47,7 +52,7 @@ public class Goal : MonoBehaviour
 
 			//DataControl.control.levelData.timeAttackMode = true;
 			
-			DataControl.control.Save();
+			//DataControl.control.Save();
 
 			Application.LoadLevel(scene);
 		}

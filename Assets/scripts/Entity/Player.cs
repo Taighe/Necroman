@@ -55,9 +55,12 @@ public class Player : Entity
 
 	public int m_lives;
 
+    bool m_onGround;
+
 	public AudioSource source;
 	public AudioClip sfxJump;
 	public AudioClip sfxDeath;
+    public AudioClip sfxSoulReturn;
 
 	GameObject interactable;
 	GameObject pickUp;
@@ -87,6 +90,7 @@ public class Player : Entity
 	GameObject m_attack;
 
     public GameObject m_portalCheckPoint = null;
+	GameObject m_soulObject;
 
     Vector2 m_portalVelocity;
 
@@ -105,53 +109,68 @@ public class Player : Entity
             m_portalCheckPoint = null;
             //if(m_portalCheckPoint != null) Destroy(m_portalCheckPoint);
 		}
-        
-        if (collision.gameObject.tag == "SoulPortal")
+        else if (collision.gameObject.tag == "SoulPortal")
         {
             m_portalCheckPoint = collision.gameObject;
 
-            m_portalCheckPoint.GetComponent<SoulPortal>().RememberForce(m_velocity);
+            //m_portalCheckPoint.GetComponent<SoulPortal>().RememberForce(m_velocity);
             //if(m_portalCheckPoint != null) Destroy(m_portalCheckPoint);
         }
 
-		if (collision.gameObject.tag == "RemnantGuide") 
-		{
-			m_remnantGuide = collision.gameObject;
-		}
-
 	}
 
-	void OnTriggerExit2D(Collider2D collision)
-	{
-		
-		if (collision.gameObject.tag == "RemnantGuide") 
-		{
-			m_remnantGuide = null;
-		}
-		
-	}
+    void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "RemnantGuide")
+        {
+            m_remnantGuide = collision.gameObject;
+        }
 
-	void OnCollisionStay2D(Collision2D collision)
-	{
-		Entity _entity = GetComponent<Entity> ();
-		_entity.OnCollisionStay2D (collision);
-		
-		if(collision.gameObject.tag == "Interactable")
+		if (collision.gameObject.tag == "SoulCatcher")
 		{
-			interactable = collision.gameObject;
+			m_soulObject = collision.gameObject;
 		}
-	}
+    }
 
-	void OnCollisionExit2D(Collision2D collision)
-	{
-		Entity _entity = GetComponent<Entity> ();
-		_entity.OnCollisionExit2D (collision);
-		
-		if(collision.gameObject.tag == "Interactable")
+    void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "RemnantGuide")
+        {
+            m_remnantGuide = null;
+        }
+
+		if (collision.gameObject.tag == "SoulCatcher")
 		{
-			interactable = null;
+			m_soulObject = null;
 		}
-	}
+    }
+
+    public void OnCollisionEnter2D(Collision2D collision)
+    {
+   
+    }
+
+    //void OnCollisionStay2D(Collision2D collision)
+    //{
+    //    Entity _entity = GetComponent<Entity> ();
+    //    _entity.OnCollisionStay2D (collision);
+		
+    //    if(collision.gameObject.tag == "Interactable")
+    //    {
+    //        interactable = collision.gameObject;
+    //    }
+    //}
+
+    //void OnCollisionExit2D(Collision2D collision)
+    //{
+    //    Entity _entity = GetComponent<Entity> ();
+    //    _entity.OnCollisionExit2D (collision);
+		
+    //    if(collision.gameObject.tag == "Interactable")
+    //    {
+    //        interactable = null;
+    //    }
+    //}
 
 	void Start()
 	{
@@ -162,6 +181,9 @@ public class Player : Entity
 		m_remnants = new ArrayList ();
 		m_animState = AnimationState.IDLE;
 		m_attack = null;
+
+        m_checkPoint = transform.position;
+
 		//m_checkpoints = new ArrayList ();
 		SetState (m_state, ref m_state);
 	}
@@ -247,19 +269,22 @@ public class Player : Entity
 
     void FixedUpdate()
     {
-        //Movement
-        if (Input.GetAxis("Horizontal") > 0)
+        if(disableControl == false)
         {
-            //m_velocity.x = speed;
-            m_rigid2D.AddForce(new Vector2(speed, 0), ForceMode2D.Force);
-        }
-        else if (Input.GetAxis("Horizontal") < 0)
-        {
-            //m_velocity.x = -speed;
-            m_rigid2D.AddForce(new Vector2(-speed, 0), ForceMode2D.Force);
+            //Movement
+            if (Input.GetAxis("Horizontal") > 0)
+            {
+                //m_velocity.x = speed;
+                m_rigid2D.AddForce(new Vector2(speed, 0), ForceMode2D.Force);
+            }
+            else if (Input.GetAxis("Horizontal") < 0)
+            {
+                //m_velocity.x = -speed;
+                m_rigid2D.AddForce(new Vector2(-speed, 0), ForceMode2D.Force);
+            }
         }
         
-        Vector2 _vel = m_velocity;
+		Vector2 _vel = m_velocity;
 
         if (m_rigid2D.velocity.x < -maxSpeed)
             _vel.x = -maxSpeed;
@@ -306,7 +331,6 @@ public class Player : Entity
 
 	void Controls()
 	{
-
         //if(Input.GetButton("Interact"))
         //{
         //    if(pickUp == null)
@@ -335,7 +359,6 @@ public class Player : Entity
 
 		//Jump
 		bool _ground = IsOnGround ();
-
 		if (Input.GetButtonDown ("Jump") && _ground )
 		{
 			Jump ();
@@ -418,7 +441,12 @@ public class Player : Entity
 
 	void ResetRemenants()
 	{
-		for(int i = 0; i < m_remnants.Count; i++)
+        if (m_remnants.Count > 0)
+        {
+        	source.PlayOneShot(sfxSoulReturn);
+        }
+
+        for(int i = 0; i < m_remnants.Count; i++)
 		{
 			GameObject _obj = (GameObject)m_remnants[i];
 			_obj.GetComponent<Entity>().Die();
@@ -443,7 +471,7 @@ public class Player : Entity
 		return false;
 	}
 
-	void Throw()
+	void Throw() // Currently not used
 	{
 		Vector2 _force = new Vector2 (m_velocity.x + (5.0f * (float)m_facing) , 5.0f);
 		pickUp.GetComponent<Rigidbody2D> ().velocity = _force;
@@ -451,7 +479,7 @@ public class Player : Entity
 		pickUp = null;
 	}
 
-	void Attack()
+    void Attack() // Currently not used
 	{
 		float offsetX = 1;
 		float offsetY = 0;
@@ -495,18 +523,10 @@ public class Player : Entity
 
 	public override void Damaged(int damage)
 	{
-		if (damage == 0) 
-		{
-			Die (true);
-		} 
-		else 
-		{
-			Die (false);
-		}
-
+	    Die (damage);
 	}
 
-	public void Die(bool createPlatform)
+	public void Die(int damage)
 	{
 		SetState (State.DEATH, ref m_state);
 		m_deathTimer = Time.time + recoverTime;
@@ -526,19 +546,24 @@ public class Player : Entity
 			GameObject soul = (GameObject)Instantiate(p_soul, transform.position, transform.rotation);
 
             soul.gameObject.tag = "Soul";
-            //soul.GetComponent<SoulParticle>().SetTarget(gameObject);
 
-            GameObject _portal = m_portalCheckPoint;
-            m_portalCheckPoint = null;
+			GameObject _portal = m_portalCheckPoint;
+            
+			m_portalCheckPoint = null;
+
 			if (m_remnantGuide != null && m_remnantGuide.GetComponent<pax_remnantGuide>().m_remnant == null) 
 			{
                 m_portalCheckPoint = _portal;
                 soul.GetComponent<SoulParticle>().SetTarget(m_remnantGuide, new Vector2(0,0));
-               
+			}
+			else if(m_soulObject != null && m_soulObject.GetComponent<SoulCatcher>().activated == false)
+			{
+				m_portalCheckPoint = _portal;
+				soul.GetComponent<SoulParticle>().SetTarget(m_soulObject, new Vector2(0,0));
 			}
 		}
 
-        m_lives -= 1;
+        m_lives -= damage;
 		Instantiate (deathExplosion, transform.position, transform.rotation);
        
 		if(m_lives < 0)
@@ -560,8 +585,7 @@ public class Player : Entity
 		GetComponent<Translation> ().SetTranslate (transform.position, _target);
 
 		m_remnantGuide = null;
-       // Destroy(m_portalCheckPoint);
-
+		//Destroy(m_portalCheckPoint);
 	}
 
 	public bool SetState(State state, ref State address)
@@ -649,10 +673,10 @@ public class Player : Entity
         }
         else if (Looking() > 0 && IsOnGround() && m_velocity.x == 0) m_animState = AnimationState.LOOK_UP;
 
-		if(Landed ())
-		{
-			m_animState = AnimationState.LAND;
-		}
+        if(Landed() )
+        {
+            m_animState = AnimationState.LAND;
+        }
 
 		if (!IsOnGround() && m_velocity.y > 0)
 		{

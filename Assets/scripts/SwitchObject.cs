@@ -3,17 +3,28 @@ using System.Collections;
 
 public class SwitchObject : MonoBehaviour 
 {
+    public bool inverse;
 
     public void TurnOn()
     {
-        GetComponent<Animator>().SetBool("Active", true);
-        GetComponent<EdgeCollider2D>().enabled = true;
+        bool _active = true;
+        
+        if (inverse)
+            _active = false;
+
+        GetComponent<Animator>().SetBool("Active", _active);
+        GetComponent<Collider2D>().enabled = _active;
     }
 
     public void TurnOff()
     {
-        GetComponent<Animator>().SetBool("Active", false);
-        GetComponent<EdgeCollider2D>().enabled = false;
+        bool _active = false;
+        
+        if (inverse)
+            _active = true;
+        
+        GetComponent<Animator>().SetBool("Active", _active);
+        GetComponent<Collider2D>().enabled = _active;
     }
 
 }
