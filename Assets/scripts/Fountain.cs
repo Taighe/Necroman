@@ -72,7 +72,7 @@ public class Fountain : MonoBehaviour
         timer += Time.deltaTime;
         Player _player = GameScene.gameScene.player.GetComponent<Player>();
 
-        if (timer >= delay && m_count < GameScene.gameScene.currentSoulFragments)
+        if (timer >= delay && m_count < nDATACONTROL.DataControl.control.levelData.scoreSoulFragments)
         {
             float radius = 15.0f;
             float _xRand = Random.RandomRange(-1.0f, 1.0f);
@@ -85,7 +85,7 @@ public class Fountain : MonoBehaviour
             m_count += 1;
         }
 
-        if (m_count >= GameScene.gameScene.currentSoulFragments) 
+        if (m_count >= nDATACONTROL.DataControl.control.levelData.scoreSoulFragments) 
             m_winSequence = new WinSequence(Win3 );
     }
     void Win3()

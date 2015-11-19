@@ -24,7 +24,8 @@ public class GUIManager : MonoBehaviour
 	public EventSystem m_eventSystem;
     public Text m_score;
     public Image m_vig;
-	
+	public bool developerKeys;
+
 	Player m_player;
 	EventSystem m_event;
 	float startTime;
@@ -56,7 +57,7 @@ public class GUIManager : MonoBehaviour
 
 	public void Retry()
 	{
-		Application.LoadLevel (GameScene.gameScene.sceneName);
+		Application.LoadLevel (Application.loadedLevelName);
         Scene.paused = false;
         Scene.buttonPressed = true;
 	}
@@ -65,7 +66,7 @@ public class GUIManager : MonoBehaviour
 	{
 		Scene.paused = false;
 		Scene.buttonPressed = true;
-		Application.LoadLevel("splash_screen");
+        Application.LoadLevel("levelSelectMenu_wip00");
 	}
 
 	// Use this for initialization
@@ -78,7 +79,10 @@ public class GUIManager : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		HUD ();
+        if (developerKeys)
+            DeveloperKeys();
+
+        HUD ();
 		ControlsMenu ();
 
 		m_pauseMenu.SetActive(Scene.paused);
@@ -98,9 +102,9 @@ public class GUIManager : MonoBehaviour
 		string _time = string.Format("{0:00}:{1:00}", _minutes, _seconds);
 		m_clock.GetComponent<Text> ().text = _time;
 		
-		m_soulFragment.text = "" + GameScene.gameScene.currentSoulFragments + "/10";
+		m_soulFragment.text = "" + nDATACONTROL.DataControl.control.levelData.scoreSoulFragments + "/10";
 
-        string _score = GameScene.gameScene.score.ToString("00000");
+        string _score = nDATACONTROL.DataControl.control.levelData.score.ToString("00000");
         m_score.text = "" + _score;
 
 		int currentLives = m_player.m_lives;
@@ -127,5 +131,19 @@ public class GUIManager : MonoBehaviour
 			}
 		}
 	}
+
+    void DeveloperKeys()
+    {
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            Retry();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+
+    }
 	
 }

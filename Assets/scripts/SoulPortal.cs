@@ -6,7 +6,7 @@ public class SoulPortal : MonoBehaviour
 {
     public bool m_active;
     public Vector2 force;
-
+	
 	// Use this for initialization
 	void Start () 
     {

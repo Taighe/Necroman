@@ -14,30 +14,26 @@ public class LevelSelect : MonoBehaviour
 
 	void Start()
 	{
-		if (dataLink == "")
-			return;
-
-		m_data = GameObject.Find (dataLink).GetComponent<LevelData>();
-
+        m_data = GetComponent<LevelData>();
 		canvas.transform.GetChild (0).gameObject.SetActive (false);
-
-		Button button = GetComponent<Button> ();
-		button.interactable = m_data.unlocked;
-
-		//Score
-		//Text score = transform.GetChild(1).GetComponent<Text>();
-		if (transform.childCount > 1) 
-		{
-			Text soulFragments = transform.GetChild (2).GetComponent<Text> ();
-			soulFragments.text = "Soul Fragments " + m_data.scoreSoulFragments + " / 10";
-		}
-
-		if ( m_data.highScore > -1 ) 
-		{
-			float finalScore = m_data.highScore / 60;
-			//score.text = finalScore + "";
-		}
 	}
+
+    void Update()
+    {
+        Button button = GetComponent<Button>();
+        button.interactable = m_data.unlocked;
+
+        //Score
+        Text score = transform.GetChild(1).GetComponent<Text>();
+
+        if (transform.childCount > 1)
+        {
+            Text soulFragments = transform.GetChild(2).GetComponent<Text>();
+            soulFragments.text = "Soul Fragments " + m_data.scoreSoulFragments + " / 10";
+        }
+
+        score.text = "" + m_data.score; 
+    }
 
 	public void ModeSelect()
 	{
@@ -47,8 +43,10 @@ public class LevelSelect : MonoBehaviour
 		Button _timeAttack = _modeSelect.transform.GetChild (1).gameObject.GetComponent<Button> ();
 		_timeAttack.interactable = m_data.timeAttackMode;
 		canvas.transform.GetChild (0).gameObject.SetActive (true);
-		DataControl.control.levelData = m_data;
-		transform.parent.gameObject.SetActive (false);
+		
+        //DataControl.control.levelData.CopyData(m_data);
+        DataControl.control.levelData = GameObject.Find(DataControl.control.levelName).GetComponent<LevelData>();
+        transform.parent.gameObject.SetActive (false);
 	}
 
 }

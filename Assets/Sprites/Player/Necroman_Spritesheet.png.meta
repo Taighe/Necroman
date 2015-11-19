@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 0e2e42f2553ddf44b8bb5a215d18df46
-timeCreated: 1443069406
+timeCreated: 1445638728
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -56,6 +56,10 @@ TextureImporter:
     21300098: Necroman_Spritesheet_49
     21300100: Necroman_Spritesheet_50
     21300102: Necroman_Spritesheet_51
+    21300104: Necroman_Spritesheet_52
+    21300106: Necroman_Spritesheet_53
+    21300108: Necroman_Spritesheet_54
+    21300110: Necroman_Spritesheet_55
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -105,7 +109,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 384
+        y: 288
         width: 32
         height: 32
       alignment: 0
@@ -115,7 +119,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 32
-        y: 384
+        y: 288
         width: 32
         height: 32
       alignment: 0
@@ -125,7 +129,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 64
-        y: 384
+        y: 288
         width: 32
         height: 32
       alignment: 0
@@ -135,7 +139,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 96
-        y: 384
+        y: 288
         width: 32
         height: 32
       alignment: 0
@@ -144,8 +148,8 @@ TextureImporter:
     - name: Necroman_Spritesheet_4
       rect:
         serializedVersion: 2
-        x: 0
-        y: 352
+        x: 128
+        y: 288
         width: 32
         height: 32
       alignment: 0
@@ -154,8 +158,8 @@ TextureImporter:
     - name: Necroman_Spritesheet_5
       rect:
         serializedVersion: 2
-        x: 32
-        y: 352
+        x: 160
+        y: 288
         width: 32
         height: 32
       alignment: 0
@@ -164,8 +168,8 @@ TextureImporter:
     - name: Necroman_Spritesheet_6
       rect:
         serializedVersion: 2
-        x: 64
-        y: 352
+        x: 0
+        y: 256
         width: 32
         height: 32
       alignment: 0
@@ -174,8 +178,8 @@ TextureImporter:
     - name: Necroman_Spritesheet_7
       rect:
         serializedVersion: 2
-        x: 96
-        y: 352
+        x: 32
+        y: 256
         width: 32
         height: 32
       alignment: 0
@@ -184,8 +188,8 @@ TextureImporter:
     - name: Necroman_Spritesheet_8
       rect:
         serializedVersion: 2
-        x: 0
-        y: 320
+        x: 64
+        y: 256
         width: 32
         height: 32
       alignment: 0
@@ -194,8 +198,8 @@ TextureImporter:
     - name: Necroman_Spritesheet_9
       rect:
         serializedVersion: 2
-        x: 32
-        y: 320
+        x: 96
+        y: 256
         width: 32
         height: 32
       alignment: 0
@@ -204,8 +208,8 @@ TextureImporter:
     - name: Necroman_Spritesheet_10
       rect:
         serializedVersion: 2
-        x: 64
-        y: 320
+        x: 128
+        y: 256
         width: 32
         height: 32
       alignment: 0
@@ -214,8 +218,8 @@ TextureImporter:
     - name: Necroman_Spritesheet_11
       rect:
         serializedVersion: 2
-        x: 96
-        y: 320
+        x: 160
+        y: 256
         width: 32
         height: 32
       alignment: 0
@@ -225,7 +229,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 288
+        y: 224
         width: 32
         height: 32
       alignment: 0
@@ -235,7 +239,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 32
-        y: 288
+        y: 224
         width: 32
         height: 32
       alignment: 0
@@ -245,7 +249,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 64
-        y: 288
+        y: 224
         width: 32
         height: 32
       alignment: 0
@@ -255,7 +259,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 96
-        y: 288
+        y: 224
         width: 32
         height: 32
       alignment: 0
@@ -264,8 +268,8 @@ TextureImporter:
     - name: Necroman_Spritesheet_16
       rect:
         serializedVersion: 2
-        x: 0
-        y: 256
+        x: 128
+        y: 224
         width: 32
         height: 32
       alignment: 0
@@ -274,8 +278,8 @@ TextureImporter:
     - name: Necroman_Spritesheet_17
       rect:
         serializedVersion: 2
-        x: 32
-        y: 256
+        x: 160
+        y: 224
         width: 32
         height: 32
       alignment: 0
@@ -284,8 +288,8 @@ TextureImporter:
     - name: Necroman_Spritesheet_18
       rect:
         serializedVersion: 2
-        x: 64
-        y: 256
+        x: 0
+        y: 192
         width: 32
         height: 32
       alignment: 0
@@ -294,8 +298,8 @@ TextureImporter:
     - name: Necroman_Spritesheet_19
       rect:
         serializedVersion: 2
-        x: 96
-        y: 256
+        x: 32
+        y: 192
         width: 32
         height: 32
       alignment: 0
@@ -304,8 +308,8 @@ TextureImporter:
     - name: Necroman_Spritesheet_20
       rect:
         serializedVersion: 2
-        x: 0
-        y: 224
+        x: 64
+        y: 192
         width: 32
         height: 32
       alignment: 0
@@ -314,8 +318,8 @@ TextureImporter:
     - name: Necroman_Spritesheet_21
       rect:
         serializedVersion: 2
-        x: 32
-        y: 224
+        x: 96
+        y: 192
         width: 32
         height: 32
       alignment: 0
@@ -324,8 +328,8 @@ TextureImporter:
     - name: Necroman_Spritesheet_22
       rect:
         serializedVersion: 2
-        x: 64
-        y: 224
+        x: 128
+        y: 192
         width: 32
         height: 32
       alignment: 0
@@ -334,8 +338,8 @@ TextureImporter:
     - name: Necroman_Spritesheet_23
       rect:
         serializedVersion: 2
-        x: 96
-        y: 224
+        x: 160
+        y: 192
         width: 32
         height: 32
       alignment: 0
@@ -345,7 +349,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 192
+        y: 160
         width: 32
         height: 32
       alignment: 0
@@ -355,7 +359,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 32
-        y: 192
+        y: 160
         width: 32
         height: 32
       alignment: 0
@@ -365,7 +369,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 64
-        y: 192
+        y: 160
         width: 32
         height: 32
       alignment: 0
@@ -375,7 +379,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 96
-        y: 192
+        y: 160
         width: 32
         height: 32
       alignment: 0
@@ -384,7 +388,7 @@ TextureImporter:
     - name: Necroman_Spritesheet_28
       rect:
         serializedVersion: 2
-        x: 0
+        x: 128
         y: 160
         width: 32
         height: 32
@@ -394,7 +398,7 @@ TextureImporter:
     - name: Necroman_Spritesheet_29
       rect:
         serializedVersion: 2
-        x: 32
+        x: 160
         y: 160
         width: 32
         height: 32
@@ -404,26 +408,6 @@ TextureImporter:
     - name: Necroman_Spritesheet_30
       rect:
         serializedVersion: 2
-        x: 64
-        y: 160
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Necroman_Spritesheet_31
-      rect:
-        serializedVersion: 2
-        x: 96
-        y: 160
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Necroman_Spritesheet_32
-      rect:
-        serializedVersion: 2
         x: 0
         y: 128
         width: 32
@@ -431,7 +415,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Necroman_Spritesheet_33
+    - name: Necroman_Spritesheet_31
       rect:
         serializedVersion: 2
         x: 32
@@ -441,7 +425,7 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Necroman_Spritesheet_34
+    - name: Necroman_Spritesheet_32
       rect:
         serializedVersion: 2
         x: 64
@@ -451,10 +435,30 @@ TextureImporter:
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
-    - name: Necroman_Spritesheet_35
+    - name: Necroman_Spritesheet_33
       rect:
         serializedVersion: 2
         x: 96
+        y: 128
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Necroman_Spritesheet_34
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 128
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Necroman_Spritesheet_35
+      rect:
+        serializedVersion: 2
+        x: 160
         y: 128
         width: 32
         height: 32
@@ -504,8 +508,8 @@ TextureImporter:
     - name: Necroman_Spritesheet_40
       rect:
         serializedVersion: 2
-        x: 0
-        y: 64
+        x: 128
+        y: 96
         width: 32
         height: 32
       alignment: 0
@@ -514,8 +518,8 @@ TextureImporter:
     - name: Necroman_Spritesheet_41
       rect:
         serializedVersion: 2
-        x: 32
-        y: 64
+        x: 160
+        y: 96
         width: 32
         height: 32
       alignment: 0
@@ -524,7 +528,7 @@ TextureImporter:
     - name: Necroman_Spritesheet_42
       rect:
         serializedVersion: 2
-        x: 64
+        x: 0
         y: 64
         width: 32
         height: 32
@@ -534,7 +538,7 @@ TextureImporter:
     - name: Necroman_Spritesheet_43
       rect:
         serializedVersion: 2
-        x: 96
+        x: 32
         y: 64
         width: 32
         height: 32
@@ -544,8 +548,8 @@ TextureImporter:
     - name: Necroman_Spritesheet_44
       rect:
         serializedVersion: 2
-        x: 0
-        y: 32
+        x: 64
+        y: 64
         width: 32
         height: 32
       alignment: 0
@@ -554,8 +558,8 @@ TextureImporter:
     - name: Necroman_Spritesheet_45
       rect:
         serializedVersion: 2
-        x: 32
-        y: 32
+        x: 96
+        y: 64
         width: 32
         height: 32
       alignment: 0
@@ -564,8 +568,8 @@ TextureImporter:
     - name: Necroman_Spritesheet_46
       rect:
         serializedVersion: 2
-        x: 64
-        y: 32
+        x: 128
+        y: 64
         width: 32
         height: 32
       alignment: 0
@@ -574,8 +578,8 @@ TextureImporter:
     - name: Necroman_Spritesheet_47
       rect:
         serializedVersion: 2
-        x: 96
-        y: 32
+        x: 160
+        y: 64
         width: 32
         height: 32
       alignment: 0
@@ -585,7 +589,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
+        y: 32
         width: 32
         height: 32
       alignment: 0
@@ -595,7 +599,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 32
-        y: 0
+        y: 32
         width: 32
         height: 32
       alignment: 0
@@ -605,13 +609,53 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 64
-        y: 0
+        y: 32
         width: 32
         height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Necroman_Spritesheet_51
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Necroman_Spritesheet_52
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Necroman_Spritesheet_53
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Necroman_Spritesheet_54
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Necroman_Spritesheet_55
       rect:
         serializedVersion: 2
         x: 96

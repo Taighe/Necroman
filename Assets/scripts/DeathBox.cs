@@ -4,11 +4,13 @@ using nENTITY;
 
 public class DeathBox : MonoBehaviour 
 {
-	void OnCollisionEnter2D(Collision2D collision)
+    public int damage = 1;
+
+    void OnTriggerEnter2D(Collider2D collision)
 	{
-		if (collision.gameObject.tag == "Player") 
+		if (collision.gameObject.tag == "Player" && collision.GetComponent<Player>().m_state == State.ALIVE) 
 		{
-			collision.gameObject.GetComponent<Entity>().Damaged(0);
+            collision.gameObject.GetComponent<Entity>().Damaged(damage);
 		}
 	}
 

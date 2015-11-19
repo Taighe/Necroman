@@ -2,10 +2,10 @@
 using System.Collections;
 using UnityEngine.EventSystems;
 using nDATACONTROL;
+using nLEVELDATA;
 
 public class LevelSelector : MonoBehaviour 
 {
-	Translation m_translation;
 	LevelSelect m_level;
 	public EventSystem m_event;
 	public float speed;
@@ -19,48 +19,66 @@ public class LevelSelector : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
-		m_translation = GetComponent<Translation> ();
+        Time.timeScale = 1.0f;
+        //m_translation = GetComponent<Translation> ();
 		m_origin = transform.position;
 		m_startTime = Time.time;
 
-		GameObject _obj = GameObject.Find (DataControl.control.levelData.levelName);
-		m_event.SetSelectedGameObject (_obj);
-		m_lastTarget = m_event.currentSelectedGameObject;
-		transform.position = m_lastTarget.transform.position;
+        m_event.SetSelectedGameObject(m_event.firstSelectedGameObject);
+
+        GetComponent<Translation>().SetTranslate(transform.position, m_event.firstSelectedGameObject.transform.position);
+        if (GameObject.Find(DataControl.control.levelData.levelName) != null)
+        {
+            GameObject _obj = GameObject.Find(DataControl.control.levelData.levelName);
+            m_event.SetSelectedGameObject(_obj);
+        }
+
+        m_lastTarget = m_event.currentSelectedGameObject;
+        transform.position = m_lastTarget.transform.position;
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
-		if (Input.GetButtonDown ("Cancel")) 
+        if (Input.GetButtonDown("Cancel") && worldCanvas.activeInHierarchy)
+        {
+            Application.LoadLevel("splash_screen");
+        }
+        
+        if (Input.GetButtonDown ("Cancel")) 
 		{
 			worldCanvas.SetActive(true);
 			modeSelect.SetActive(false);
 			m_event.SetSelectedGameObject(m_lastTarget);
 		}
 
-		float delta = Time.time - m_startTime;  
-		float distanceCovered = delta / speed; 
+		//float delta = Time.time - m_startTime;  
+		//float distanceCovered = delta / speed; 
 		Vector3 currentPos = transform.position;
-		GameObject _target = m_event.currentSelectedGameObject;
+
+        if (m_event.currentSelectedGameObject.GetComponent<LevelData>() != null)
+        {
+            DataControl.control.levelName = m_event.currentSelectedGameObject.GetComponent<LevelData>().levelName;
+        }
+            
+        GameObject _target = m_event.currentSelectedGameObject;
 
 		if (worldCanvas.activeInHierarchy == false)
 			return;
 
-		if(currentPos == _target.transform.position)
-		{
-			m_startTime = Time.time;
-			m_origin = _target.transform.position;
-		}
+        GetComponent<Translation>().SetTranslate(transform.position, _target.transform.position);
 
-		currentPos = Vector3.Lerp (m_origin, _target.transform.position, distanceCovered);
-		transform.position = currentPos;
+        GetComponent<Translation>().Translate();
+
 		m_lastTarget = _target;
 
 	}
 
 	public void LoadLevel()
 	{
-		Application.LoadLevel (DataControl.control.levelData.trueLevelName);
+        DataControl.control.GetComponent<LevelData>().CopyData(DataControl.control.levelData);
+        DataControl.control.levelData = DataControl.control.GetComponent<LevelData>();
+        DataControl.control.levelData.highScore = DataControl.control.levelData.score;
+        Application.LoadLevel (DataControl.control.levelName);
 	}
 }

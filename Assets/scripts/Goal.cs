@@ -11,6 +11,7 @@ public class Goal : MonoBehaviour
 	public float delay;
 	float m_timer;
 	bool m_IsOpen;
+    public bool m_isTransition;
 
 	Animator m_animator;
 
@@ -21,6 +22,7 @@ public class Goal : MonoBehaviour
 			if(Input.GetAxis("Vertical") > 0 )
 			{
 				m_IsOpen = true;
+                if (m_isTransition) OpenDoor();
 			}
 		}
 	}
@@ -29,25 +31,30 @@ public class Goal : MonoBehaviour
 	{
 		if(m_timer >= delay)
 		{
-			DataControl.control.levelData.scoreSoulFragments = GameScene.gameScene.currentSoulFragments;
-			GameObject _collectable = GameScene.gameScene.gameObject.transform.GetChild (1).gameObject;
-//
-			for (int i = 0; i < GameScene.gameScene.totalSoulFragments; i++) 
-			{
-				DataControl.control.levelData.collectedSouls[i] = _collectable.transform.GetChild(i).GetComponent<Collectable>().IsCollected;
-			}
-//
-//			if(DataControl.control.levelData.nextlevel != "")
-//			{
-//				LevelData _lastlevel = DataControl.control.levelData;
-//				DataControl.control.levelData = GameObject.Find(DataControl.control.levelData.nextlevel).GetComponent<LevelData>();
-//				DataControl.control.levelData.unlocked = true;
-//				DataControl.control.levelData = _lastlevel;
-//			}
+            DataControl.control.levelData.time = GameScene.gameScene.levelTime;
 
-			//DataControl.control.levelData.timeAttackMode = true;
+            GameObject _collectable = GameScene.gameScene.gameObject.transform.GetChild(0).gameObject;
+            //
+            for (int i = 0; i < GameScene.gameScene.totalSoulFragments; i++)
+            {
+                DataControl.control.levelData.collectedSouls[i] = _collectable.transform.GetChild(i).GetComponent<Collectable>().IsCollected;
+            }
+            
+            if(GameScene.gameScene.IsMidLevel == true)
+            {
+
+    //			if(DataControl.control.levelData.nextlevel != "")
+    //			{
+    //				LevelData _lastlevel = DataControl.control.levelData;
+    //				DataControl.control.levelData = GameObject.Find(DataControl.control.levelData.nextlevel).GetComponent<LevelData>();
+    //				DataControl.control.levelData.unlocked = true;
+    //				DataControl.control.levelData = _lastlevel;
+    //			}
+
+			    //DataControl.control.levelData.timeAttackMode = true;
 			
-			DataControl.control.Save();
+			    DataControl.control.Save(GameScene.gameScene);
+            }
 
 			Application.LoadLevel(scene);
 		}

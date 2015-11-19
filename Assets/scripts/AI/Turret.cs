@@ -29,7 +29,9 @@ public class Turret : Entity
 
 		if(CanFire() )
 		{
-			GameObject _obj = (GameObject)Instantiate(projectile, transform.position, transform.rotation);
+			Vector2 _pos = transform.position;
+            _pos.x = _pos.x + (0.8f * (float)m_facing);
+            GameObject _obj = (GameObject)Instantiate(projectile, _pos, transform.rotation);
 			_obj.GetComponent<Projectile>().SetProjectile(speed, (int)m_facing, this.gameObject);
 		}
 	}

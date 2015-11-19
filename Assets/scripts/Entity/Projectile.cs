@@ -4,23 +4,23 @@ using nENTITY;
 
 public class Projectile : Entity 
 {
-	float m_speed;
+	public float m_speed;
 	GameObject m_owner;
+    public int damage;
 
 	void OnTriggerEnter2D(Collider2D collision)
 	{
-		if (collision.gameObject.tag == "Player") 
+        Animator _anim = GetComponent<Animator>();
+        if (collision.gameObject.tag == "Player" && !_anim.GetBool("Dead")) 
 		{
-			collision.gameObject.GetComponent<Entity>().Damaged(0);
-			Destroy(this.gameObject);
+			collision.gameObject.GetComponent<Entity>().Damaged(damage);
+            Die();
 		}
 
 		if(collision.gameObject.tag == "Terrain")
 		{
-			GameObject _obj = collision.gameObject;
-
-			Destroy(this.gameObject);
-
+			//GameObject _obj = collision.gameObject;
+            Die();
 		}
 	}
 
@@ -30,11 +30,10 @@ public class Projectile : Entity
 		m_speed = speed;
 		m_owner = owner;
 		ChangeInFacing ();
-
 	} 
 
 	// Update is called once per frame
-	void Update () 
+	new void Update () 
 	{
 		//If game is paused don't update object
 		if (IsPaused() )
@@ -44,10 +43,17 @@ public class Projectile : Entity
 		_pos.x += (m_speed * (float)m_facing) * Time.deltaTime;
 
 		transform.position = _pos;
+
+        Animator _anim = GetComponent<Animator>();
+        if(_anim.GetCurrentAnimatorStateInfo(0).IsName("End"))
+        {
+            Destroy(this.gameObject);
+        }   
 	}
 
 	public override void Die()
 	{
-
+        GetComponent<Animator>().SetBool("Dead", true);
+        m_speed = 0;
 	}
 }

@@ -35,8 +35,6 @@ namespace nATTACK
 				Entity _entity = collision.gameObject.GetComponent<Entity>();
 				if(_entity == null) return;
 
-				GameObject _owner = m_owner;
-
 				Player _player = m_owner.GetComponent<Player>();
 
 				if(_entity.m_team != m_team)

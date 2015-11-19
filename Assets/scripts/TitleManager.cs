@@ -38,7 +38,7 @@ public class TitleManager : MonoBehaviour
 	
 	public void Continue()
 	{
-		DataControl.control.Load ();
+		//DataControl.control.Load ();
 		Application.LoadLevel ("levelSelectMenu_wip00");
 	}
 

@@ -12,9 +12,14 @@ namespace nSCENE
 		public static GameScene gameScene;
 		public int totalSoulFragments;
 		public int currentSoulFragments;
-        public int score = 0;
+        public int score;
 		public GameObject currentCheckpoint;
         public string sceneName;
+		public bool IsMidLevel;
+        public bool HasReset;
+        public bool NoDataControl;
+        public int LevelID;
+        int m_startScore;
 
 		public GameObject player;
 
@@ -33,24 +38,47 @@ namespace nSCENE
 				gameScene = this;
 			}
 
+            if (NoDataControl == true)
+            {
+                LocalLevel();
+                return;
+            }
+
+            if(!IsMidLevel)
+            {
+                DataControl.control.levelData.score = 0;
+            }
+
+            //levelTime = DataControl.control.levelData.time;
+
 			s_levelTime = levelTime;
 			startTime = Time.time;
 
-			currentSoulFragments = DataControl.control.levelData.scoreSoulFragments;
+            score = DataControl.control.levelData.score;
 
-			if(DataControl.control.levelData.collectedSouls.Length == 0)
-			{
-				DataControl.control.levelData.collectedSouls = new bool[totalSoulFragments];
-			}
-
+            int currentSoulsCollected = 0;
 			for(int i = 0; i < totalSoulFragments; i++)
 			{
-				GameObject _collectables = gameScene.gameObject.transform.GetChild(1).gameObject;
+				GameObject _collectables = gameScene.gameObject.transform.GetChild(0).gameObject;
 				_collectables.transform.GetChild(i).GetComponent<Collectable>().IsCollected = DataControl.control.levelData.collectedSouls[i];
+               
+                if(DataControl.control.levelData.collectedSouls[i] == true)
+                {
+                    _collectables.transform.GetChild(i).GetChild(0).GetComponent<SpriteRenderer>().color = new Vector4(1,1,1, 0.2f);
+                    currentSoulsCollected++;
+                }
 			}
 
+            DataControl.control.levelData.scoreSoulFragments = currentSoulsCollected;
+
 		}
-		
+
+        void LocalLevel()
+        {
+            s_levelTime = levelTime;
+            startTime = Time.time;
+        }
+
 		// Update is called once per frame
 		void Update () 
 		{
@@ -85,6 +113,8 @@ namespace nSCENE
 		public void SetGameOver()
 		{
 			m_isGameOver = true;
+            DataControl.control.levelData.time = levelTime;
+            DataControl.control.levelData.score = 0;
 		}
 
 		public bool IsGameOver()

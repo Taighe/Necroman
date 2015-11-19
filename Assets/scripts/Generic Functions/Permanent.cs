@@ -8,6 +8,12 @@ public class Permanent : MonoBehaviour
 	void Start () 
 	{
 		DontDestroyOnLoad (gameObject);
+
+        GameObject m_object = GameObject.Find(gameObject.name);
+        if(m_object != gameObject)
+        {
+            Destroy(gameObject);
+        } 
 	}
 
 }

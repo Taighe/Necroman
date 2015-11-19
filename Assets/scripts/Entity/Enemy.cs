@@ -9,6 +9,7 @@ public class Enemy : Entity
 	public int hitPoints;
 	public int boneValue;
 	public bool IsRESPAWNABLE;
+    public GameObject p_explosion;
 	
 	public GameObject p_attack;
 	GameObject m_attack;
@@ -30,42 +31,31 @@ public class Enemy : Entity
 
 	void OnCollisionEnter2D(Collision2D collision)
 	{
-		if(collision.gameObject.tag == "Player" && m_team == Team.HOSTILE)
+		if(collision.gameObject.tag == "Player" && m_team == Team.HOSTILE && m_state == State.ALIVE)
 		{
-			collision.gameObject.GetComponent<Entity>().Damaged(1);
+			if(collision.contacts[0].normal.y < 0)
+            {
+                Damaged(1);
+                GameScene.gameScene.player.GetComponent<Player>().Hop(GameScene.gameScene.player.GetComponent<Player>().boostJump);
+                //
+            }
+            else
+            {
+                collision.gameObject.GetComponent<Entity>().Damaged(1);
+            }
 		}
 	}
 
 	// Update is called once per frame
-	void Update () 
+	new void Update () 
 	{
 		GetComponent<Entity> ().Update ();
 		if (m_state == State.DEATH) 
 		{
-			if(IsRESPAWNING )
-			{
-//				if(m_translate.Translate() >= 1)
-//				{
-//					IsRESPAWNING = false;
-//					SetState(State.ALIVE, ref m_state);
-//					m_translate.m_timer = 0;
-//				}
-
-				return;
-			}
-
-			m_deathPoint = transform.position;
-
-			m_translate.SetTranslate(m_deathPoint, m_spawnPoint);
-
-			if(m_player == null) return;
-
 			if(m_player.RespawnSignal() )
 			{
-				if(m_player.m_respawnArea.Contains(transform.position) )
-				{
-					Respawn();
-				}
+                transform.position = m_spawnPoint;
+                SetState(State.ALIVE, ref m_state);
 			}
 		}
 
@@ -94,28 +84,34 @@ public class Enemy : Entity
 
 	public void Respawn()
 	{
-		IsRESPAWNING = true;
-		m_team = Team.PLAYER;
-		transform.GetChild (0).gameObject.SetActive(true);
+		//IsRESPAWNING = true;
+        transform.position = m_spawnPoint;
 	}
 
 	bool SetState(State state, ref State address)
 	{
-		switch (state) 
+        m_state = state;
+        switch (state) 
 		{
 			case State.ALIVE:
 			{
-				gameObject.layer = 0;
-				m_rigid2D.isKinematic = true;
+				//m_rigid2D.isKinematic = true;
 				address = state;
+                GetComponent<SpriteRenderer>().enabled = true;
+                GetComponent<BoxCollider2D>().enabled = true;
 				return true; 
 			}
 			case State.DEATH:
 			{
-				gameObject.layer = 10;
-				m_rigid2D.isKinematic = false;
-				address = state;
-				return true;
+				//gameObject.layer = 10;
+				//m_rigid2D.isKinematic = false;
+                Instantiate(p_explosion, transform.position, transform.rotation);
+                GetComponent<SpriteRenderer>().enabled = false;
+                GetComponent<BoxCollider2D>().enabled = false;
+
+                //Destroy(gameObject);
+				
+                return true;
 			}
 		}
 		

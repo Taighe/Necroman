@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using nSCENE;
+using nDATACONTROL;
 using nLEVELDATA;
 
 namespace nCOLLECTABLE
@@ -23,7 +23,7 @@ namespace nCOLLECTABLE
             if (collision.gameObject.tag == "Player" && IsCollected == false && m_type == Type.SOUL_FRAGMENT)
 			{
 				IsCollected = true;
-				GameScene.gameScene.currentSoulFragments += 1;
+				DataControl.control.levelData.scoreSoulFragments += 1;
 				source.PlayOneShot(sfxCollect);
                 transform.GetChild(0).GetComponent<Animator>().SetBool("Collect", true);
 			}
@@ -31,7 +31,7 @@ namespace nCOLLECTABLE
             if (collision.gameObject.tag == "Player" && IsCollected == false && m_type == Type.SOUL_SHARD)
             {
                 IsCollected = true;
-                GameScene.gameScene.score += 10;
+                DataControl.control.levelData.score += 10;
                 transform.GetChild(0).GetComponent<Animator>().SetBool("Collect", true);
             }
 		}
