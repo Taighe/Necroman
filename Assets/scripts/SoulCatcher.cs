@@ -51,11 +51,7 @@ public class SoulCatcher : MonoBehaviour
         if (collision.gameObject.tag == "Soul" && activated == false)
         {
             activated = true;
-<<<<<<< HEAD
             collision.gameObject.GetComponent<SoulParticle>().SetTarget(gameObject, m_center);
-=======
-            collision.gameObject.GetComponent<SoulParticle>().SetTarget(this.gameObject, m_center);
->>>>>>> 21dc313385a69ec8ab09a283464716e27b7ab483
             
             //for(int i = 0; i < linkObjects.Length; i++)
             //{
@@ -107,8 +103,6 @@ public class SoulCatcher : MonoBehaviour
                 GameObject soulparticle = (GameObject)Instantiate(p_soulParticle, transform.position + m_center, transform.rotation);
                 soulparticle.GetComponent<SoulParticle>().SetTarget(GameScene.gameScene.player, new Vector2(0, 0));
                 soulparticle.gameObject.tag = "SoulCollect";
-<<<<<<< HEAD
-=======
             }
         }
         else
@@ -126,42 +120,6 @@ public class SoulCatcher : MonoBehaviour
         anim.SetBool("Active", activated);
     }
 
-    void Switch()
-    {
-        Animator anim = GetComponent<Animator>();
-
-        if (activated)
-        {
-            m_spiritTracks.SetFloat("_Fadeonoff", 1.0f);
-            if (Input.GetButtonDown("Reset") && IsWithinRadius(GameScene.gameScene.player))
-            {
-                activated = false;
-                GameObject soulparticle = (GameObject)Instantiate(p_soulParticle, transform.position + m_center, transform.rotation);
-                soulparticle.GetComponent<SoulParticle>().SetTarget(GameScene.gameScene.player, new Vector2(0, 0));
-                soulparticle.gameObject.tag = "SoulCollect";
-                for (int i = 0; i < linkObjects.Length; i++)
-                {
-                    linkObjects[i].GetComponent<SwitchObject>().TurnOff();
-                }
->>>>>>> 21dc313385a69ec8ab09a283464716e27b7ab483
-            }
-        }
-        else
-        {
-            m_spiritTracks.SetFloat("_Fadeonoff", 0);
-            m_runes.SetFloat("_timeleft0to1", 1.0f);
-            time = 0;
-
-            for (int i = 0; i < linkObjects.Length; i++)
-            {
-                linkObjects[i].GetComponent<SwitchObject>().TurnOff();
-            }
-        }
-
-        anim.SetBool("Active", activated);
-    }
-
-<<<<<<< HEAD
     void Switch()
     {
         Animator anim = GetComponent<Animator>();
@@ -198,8 +156,6 @@ public class SoulCatcher : MonoBehaviour
 
     }
 
-=======
->>>>>>> 21dc313385a69ec8ab09a283464716e27b7ab483
     bool IsWithinRadius(GameObject _object)
     {
         if (m_object != null) 

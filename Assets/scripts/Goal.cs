@@ -31,7 +31,6 @@ public class Goal : MonoBehaviour
 	{
 		if(m_timer >= delay)
 		{
-<<<<<<< HEAD
             DataControl.control.levelData.time = GameScene.gameScene.levelTime;
 
             GameObject _collectable = GameScene.gameScene.gameObject.transform.GetChild(0).gameObject;
@@ -51,35 +50,11 @@ public class Goal : MonoBehaviour
     //				DataControl.control.levelData.unlocked = true;
     //				DataControl.control.levelData = _lastlevel;
     //			}
-=======
-			DataControl.control.levelData.scoreSoulFragments = GameScene.gameScene.currentSoulFragments;
-            DataControl.control.levelData.score = GameScene.gameScene.score;
-			DataControl.control.levelData.time = GameScene.gameScene.levelTime;
-
-			GameObject _collectable = GameScene.gameScene.gameObject.transform.GetChild (1).gameObject;
-//
-			for (int i = 0; i < GameScene.gameScene.totalSoulFragments; i++) 
-			{
-				DataControl.control.levelData.collectedSouls[i] = _collectable.transform.GetChild(i).GetComponent<Collectable>().IsCollected;
-			}
-//
-//			if(DataControl.control.levelData.nextlevel != "")
-//			{
-//				LevelData _lastlevel = DataControl.control.levelData;
-//				DataControl.control.levelData = GameObject.Find(DataControl.control.levelData.nextlevel).GetComponent<LevelData>();
-//				DataControl.control.levelData.unlocked = true;
-//				DataControl.control.levelData = _lastlevel;
-//			}
->>>>>>> 21dc313385a69ec8ab09a283464716e27b7ab483
 
 			    //DataControl.control.levelData.timeAttackMode = true;
 			
-<<<<<<< HEAD
 			    DataControl.control.Save(GameScene.gameScene);
             }
-=======
-			//DataControl.control.Save();
->>>>>>> 21dc313385a69ec8ab09a283464716e27b7ab483
 
 			Application.LoadLevel(scene);
 		}

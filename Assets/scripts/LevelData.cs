@@ -19,25 +19,13 @@ namespace nLEVELDATA
 		public string trueLevelName;
         public int score;
 		public float time;
-<<<<<<< HEAD
         public int levelID;
-=======
->>>>>>> 21dc313385a69ec8ab09a283464716e27b7ab483
 
         void Start()
         {
-<<<<<<< HEAD
             if (Application.loadedLevelName == "levelSelectMenu_wip00")
             {
                 DataControl.control.Load(this);
-=======
-            if (index == 1) 
-            {
-                scoreSoulFragments = 0;
-                collectedSouls = new bool[10];
-				score = 0;
-                time = 301;
->>>>>>> 21dc313385a69ec8ab09a283464716e27b7ab483
             }
         }
 

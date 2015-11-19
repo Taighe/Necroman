@@ -19,11 +19,7 @@ public class Projectile : Entity
 
 		if(collision.gameObject.tag == "Terrain")
 		{
-<<<<<<< HEAD
 			//GameObject _obj = collision.gameObject;
-=======
-			GameObject _obj = collision.gameObject;
->>>>>>> 21dc313385a69ec8ab09a283464716e27b7ab483
             Die();
 		}
 	}

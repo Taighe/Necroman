@@ -17,12 +17,9 @@ namespace nSCENE
         public string sceneName;
 		public bool IsMidLevel;
         public bool HasReset;
-<<<<<<< HEAD
         public bool NoDataControl;
         public int LevelID;
         int m_startScore;
-=======
->>>>>>> 21dc313385a69ec8ab09a283464716e27b7ab483
 
 		public GameObject player;
 
@@ -41,7 +38,6 @@ namespace nSCENE
 				gameScene = this;
 			}
 
-<<<<<<< HEAD
             if (NoDataControl == true)
             {
                 LocalLevel();
@@ -54,24 +50,11 @@ namespace nSCENE
             }
 
             //levelTime = DataControl.control.levelData.time;
-=======
-			levelTime = DataControl.control.levelData.time;
->>>>>>> 21dc313385a69ec8ab09a283464716e27b7ab483
 
 			s_levelTime = levelTime;
 			startTime = Time.time;
 
-<<<<<<< HEAD
             score = DataControl.control.levelData.score;
-=======
-			currentSoulFragments = DataControl.control.levelData.scoreSoulFragments;
-            score = DataControl.control.levelData.score;
-
-			if(DataControl.control.levelData.collectedSouls.Length == 0)
-			{
-				DataControl.control.levelData.collectedSouls = new bool[totalSoulFragments];
-			}
->>>>>>> 21dc313385a69ec8ab09a283464716e27b7ab483
 
             int currentSoulsCollected = 0;
 			for(int i = 0; i < totalSoulFragments; i++)
@@ -131,10 +114,7 @@ namespace nSCENE
 		{
 			m_isGameOver = true;
             DataControl.control.levelData.time = levelTime;
-<<<<<<< HEAD
             DataControl.control.levelData.score = 0;
-=======
->>>>>>> 21dc313385a69ec8ab09a283464716e27b7ab483
 		}
 
 		public bool IsGameOver()
