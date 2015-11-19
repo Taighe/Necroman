@@ -5,7 +5,11 @@ using nSCENE;
 public class SoulParticle : MonoBehaviour
 {
 	public GameObject remnant;
+<<<<<<< HEAD
 	public GameObject m_target = null;
+=======
+	public GameObject m_target;
+>>>>>>> 21dc313385a69ec8ab09a283464716e27b7ab483
 	Translation m_translate;
     Vector2 m_offset;
     Rect m_rect;
@@ -13,11 +17,14 @@ public class SoulParticle : MonoBehaviour
     bool m_collect = false;
 	public float timer;
 	public float delay;
+<<<<<<< HEAD
     public bool m_createRemnant;
     bool m_projectileMode;
     float m_projectileSpeed;
     
     float m_recallDistance;
+=======
+>>>>>>> 21dc313385a69ec8ab09a283464716e27b7ab483
 
 	// Use this for initialization
 	void Start () 
@@ -95,7 +102,10 @@ public class SoulParticle : MonoBehaviour
         //No target don't do anything
         if (m_target == null)
 			return;
+<<<<<<< HEAD
         //
+=======
+>>>>>>> 21dc313385a69ec8ab09a283464716e27b7ab483
 
         Vector3 _offset = new Vector3(m_offset.x, m_offset.y, 0);
 		Vector3 _pos = m_target.transform.position + _offset;
@@ -118,6 +128,13 @@ public class SoulParticle : MonoBehaviour
             {
                 GameScene.gameScene.player.GetComponent<Player>().AddSouls(1);
                 m_collect = true;
+
+				timer += 1.0f * Time.deltaTime;
+
+				if(timer >= delay)
+				{
+					Destroy(gameObject);
+				}
             }
 
             if (m_translate.AtDestination())
@@ -147,7 +164,12 @@ public class SoulParticle : MonoBehaviour
             RaycastHit2D hit = Physics2D.CircleCast(transform.position, circle.radius, Vector2.zero, 1.0f, 1 << LayerMask.NameToLayer("SoulInteract"));
             if (hit.collider != null && hit.collider.isTrigger)
             {
+<<<<<<< HEAD
                 return true;
+=======
+                GameObject _remnant = (GameObject)Instantiate(remnant, transform.GetChild(0).position, transform.rotation);
+                GameScene.gameScene.player.GetComponent<Player>().AddRemnant(_remnant);
+>>>>>>> 21dc313385a69ec8ab09a283464716e27b7ab483
             }
                 
         }

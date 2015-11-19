@@ -4,6 +4,7 @@ using System.Collections;
 public class SwitchObject : MonoBehaviour 
 {
     public bool inverse;
+<<<<<<< HEAD
     public bool active;
 
     void Start()
@@ -13,6 +14,8 @@ public class SwitchObject : MonoBehaviour
             TurnOn();
         }     
     }
+=======
+>>>>>>> 21dc313385a69ec8ab09a283464716e27b7ab483
 
     public void TurnOn()
     {
