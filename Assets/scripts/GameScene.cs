@@ -18,7 +18,7 @@ namespace nSCENE
 		public bool IsMidLevel;
         public bool HasReset;
         public bool NoDataControl;
-        public int LevelID;
+        //public int LevelID;
         int m_startScore;
 
 		public GameObject player;
@@ -93,11 +93,6 @@ namespace nSCENE
 
 			s_levelTime = levelTime;
 
-			if (levelTime <= 0) 
-			{
-				Time.timeScale = 1;
-				Application.LoadLevel("end_screen");
-			}
 		}
 
 		public static void AddLevelTime(float time)

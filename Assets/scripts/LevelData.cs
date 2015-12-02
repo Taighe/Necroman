@@ -9,7 +9,10 @@ namespace nLEVELDATA
 	public class LevelData : MonoBehaviour 
 	{
 		public float highScore;
+        public int soulFragmentRequirement;
 		public bool unlocked;
+        public bool completed;
+        public bool passedRequirement;
 		public int scoreSoulFragments;
 		public bool[] collectedSouls;
 		public bool medal;
@@ -20,14 +23,6 @@ namespace nLEVELDATA
         public int score;
 		public float time;
         public int levelID;
-
-        void Start()
-        {
-            if (Application.loadedLevelName == "levelSelectMenu_wip00")
-            {
-                DataControl.control.Load(this);
-            }
-        }
 
         public void CopyData(LevelData data)
         {
@@ -42,8 +37,9 @@ namespace nLEVELDATA
             trueLevelName = data.trueLevelName;
             score = data.score;
             time = data.time;
-
+            completed = data.completed;
+            passedRequirement = data.passedRequirement;
+            soulFragmentRequirement = data.soulFragmentRequirement;
         }
-
 	}
 }

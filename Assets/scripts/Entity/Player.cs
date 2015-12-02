@@ -35,6 +35,7 @@ public class Player : Entity
     public Light p_glow;
     public Object p_soul;
     public bool disableControl;
+    public bool debug;
     public GameObject deathExplosion;
 
     public int maxRemnants;
@@ -104,6 +105,9 @@ public class Player : Entity
 
     Vector2 m_force;
 
+    //Debug Values
+    int m_dCheckpointIndex = 0;
+
     //Collisions
     void OnTriggerEnter2D(Collider2D collision)
     {
@@ -115,6 +119,7 @@ public class Player : Entity
             m_respawn = true;
             GameScene.gameScene.currentCheckpoint = collision.gameObject;
             GameScene.gameScene.currentCheckpoint.GetComponent<CheckPoint>().Activate();
+            GameScene.gameScene.currentCheckpoint.GetComponent<CheckPoint>().EmitWave();
             m_portalCheckPoint = null;
             Destroy(m_soulPoint);
             m_soulPoint = null;
@@ -220,11 +225,21 @@ public class Player : Entity
 
         Scene.buttonPressed = false;
 
+        if (debug)
+        {
+            DebugControls();
+        }
+            
         //State machine
         switch (m_state)
         {
             case State.ALIVE:
             {
+                if(m_remnants.Count != 0)
+                {
+                    GameObject oldestRemnant = (GameObject)m_remnants[0];
+                    oldestRemnant.GetComponent<Remnant>().Glow();
+                }
 
                 if (disableControl == false)
                 {
@@ -348,6 +363,27 @@ public class Player : Entity
             GetComponent<Translation>().Translate();
         }
 
+    }
+
+    void DebugControls()
+    {
+        GameObject checkpoints = GameObject.Find("Checkpoints");
+        Vector3 currentPos = checkpoints.transform.GetChild(m_dCheckpointIndex).transform.position;
+
+        if(Input.GetKeyDown(KeyCode.Keypad6))
+        {
+            transform.position = new Vector3(currentPos.x, currentPos.y, transform.position.z);
+            m_dCheckpointIndex += 1;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Keypad4))
+        {
+            transform.position = new Vector3(currentPos.x, currentPos.y, transform.position.z);
+            m_dCheckpointIndex -= 1;
+        }
+
+        if (m_dCheckpointIndex >= checkpoints.transform.childCount || m_dCheckpointIndex < 0)
+            m_dCheckpointIndex = 0;
     }
 
     void Controls()
@@ -765,8 +801,6 @@ public class Player : Entity
         {
             m_animState = AnimationState.LAND;
         }
-
-
 
         AnimatorStateInfo _state = m_animator.GetCurrentAnimatorStateInfo(0);
 

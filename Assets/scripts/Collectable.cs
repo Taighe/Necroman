@@ -33,6 +33,7 @@ namespace nCOLLECTABLE
                 IsCollected = true;
                 DataControl.control.levelData.score += 10;
                 transform.GetChild(0).GetComponent<Animator>().SetBool("Collect", true);
+                source.PlayOneShot(sfxCollect);
             }
 		}
 

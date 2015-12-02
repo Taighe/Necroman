@@ -42,20 +42,9 @@ public class Goal : MonoBehaviour
             
             if(GameScene.gameScene.IsMidLevel == true)
             {
-
-    //			if(DataControl.control.levelData.nextlevel != "")
-    //			{
-    //				LevelData _lastlevel = DataControl.control.levelData;
-    //				DataControl.control.levelData = GameObject.Find(DataControl.control.levelData.nextlevel).GetComponent<LevelData>();
-    //				DataControl.control.levelData.unlocked = true;
-    //				DataControl.control.levelData = _lastlevel;
-    //			}
-
-			    //DataControl.control.levelData.timeAttackMode = true;
-			
-			    DataControl.control.Save(GameScene.gameScene);
+                DataControl.control.Save();		
             }
-
+           
 			Application.LoadLevel(scene);
 		}
 

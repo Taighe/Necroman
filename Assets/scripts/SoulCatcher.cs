@@ -97,7 +97,7 @@ public class SoulCatcher : MonoBehaviour
             m_runes.SetFloat("_timeleft0to1", _percent);
             m_spiritTracks.SetFloat("_Fadeonoff", 1.0f);
 
-            if (time >= delay || Input.GetButtonDown("Reset"))
+            if (time >= delay)
             {
                 activated = false;
                 GameObject soulparticle = (GameObject)Instantiate(p_soulParticle, transform.position + m_center, transform.rotation);
@@ -134,7 +134,6 @@ public class SoulCatcher : MonoBehaviour
                 GameObject soulparticle = (GameObject)Instantiate(p_soulParticle, transform.position + m_center, transform.rotation);
                 soulparticle.GetComponent<SoulParticle>().SetTarget(GameScene.gameScene.player, new Vector2(0, 0));
                 soulparticle.gameObject.tag = "SoulCollect";
-
             }
 
             for (int i = 0; i < linkObjects.Length; i++)

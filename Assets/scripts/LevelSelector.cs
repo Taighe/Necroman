@@ -39,12 +39,7 @@ public class LevelSelector : MonoBehaviour
 	
 	// Update is called once per frame
 	void Update () 
-	{
-        if (Input.GetButtonDown("Cancel") && worldCanvas.activeInHierarchy)
-        {
-            Application.LoadLevel("splash_screen");
-        }
-        
+	{  
         if (Input.GetButtonDown ("Cancel")) 
 		{
 			worldCanvas.SetActive(true);
@@ -52,33 +47,33 @@ public class LevelSelector : MonoBehaviour
 			m_event.SetSelectedGameObject(m_lastTarget);
 		}
 
-		//float delta = Time.time - m_startTime;  
-		//float distanceCovered = delta / speed; 
 		Vector3 currentPos = transform.position;
 
         if (m_event.currentSelectedGameObject.GetComponent<LevelData>() != null)
         {
-            DataControl.control.levelName = m_event.currentSelectedGameObject.GetComponent<LevelData>().levelName;
+            DataControl.control.levelData.CopyData(m_event.currentSelectedGameObject.GetComponent<LevelData>());
+            DataControl.control.reflevelData = m_event.currentSelectedGameObject.GetComponent<LevelData>();
         }
             
         GameObject _target = m_event.currentSelectedGameObject;
 
-		if (worldCanvas.activeInHierarchy == false)
-			return;
+        //Follow Target
+        if(_target.layer != (1 >> LayerMask.NameToLayer("UI")))
+        {
+            return;
+        }
 
+        m_event.sendNavigationEvents = GetComponent<Translation>().AtDestination();
+            
         GetComponent<Translation>().SetTranslate(transform.position, _target.transform.position);
 
         GetComponent<Translation>().Translate();
 
 		m_lastTarget = _target;
-
 	}
 
 	public void LoadLevel()
 	{
-        DataControl.control.GetComponent<LevelData>().CopyData(DataControl.control.levelData);
-        DataControl.control.levelData = DataControl.control.GetComponent<LevelData>();
-        DataControl.control.levelData.highScore = DataControl.control.levelData.score;
-        Application.LoadLevel (DataControl.control.levelName);
+        Application.LoadLevel (DataControl.control.levelData.levelName);
 	}
 }

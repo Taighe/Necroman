@@ -15,6 +15,7 @@ public class PlayerEditor : Editor {
             Undo.RecordObject(currentPlayer, "Player");
             currentPlayer.m_facing = nENTITY.Facing.RIGHT;
         }
+
     }
 
 }

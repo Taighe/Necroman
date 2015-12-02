@@ -66,7 +66,7 @@ public class GUIManager : MonoBehaviour
 	{
 		Scene.paused = false;
 		Scene.buttonPressed = true;
-        Application.LoadLevel("levelSelectMenu_wip00");
+        Application.LoadLevel("splash_screen");
 	}
 
 	// Use this for initialization
@@ -96,12 +96,20 @@ public class GUIManager : MonoBehaviour
 
 	void HUD()
 	{
-		int _seconds = (int)(GameScene.gameScene.levelTime % 60.0f);
-		
-		int _minutes = (int)GameScene.gameScene.levelTime / 60;
-		string _time = string.Format("{0:00}:{1:00}", _minutes, _seconds);
-		m_clock.GetComponent<Text> ().text = _time;
-		
+		//Gui
+        if(nDATACONTROL.DataControl.control.levelData.timeAttackMode )
+        {
+            int _seconds = (int)(GameScene.gameScene.levelTime % 60.0f);
+
+            int _minutes = (int)GameScene.gameScene.levelTime / 60;
+            string _time = string.Format("{0:00}:{1:00}", _minutes, _seconds);
+            m_clock.GetComponent<Text>().text = _time;
+        }
+        else
+        {
+            m_clock.SetActive(false);
+        }
+
 		m_soulFragment.text = "" + nDATACONTROL.DataControl.control.levelData.scoreSoulFragments + "/10";
 
         string _score = nDATACONTROL.DataControl.control.levelData.score.ToString("00000");

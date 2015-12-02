@@ -22,8 +22,14 @@ namespace nREMNANT
 		// Use this for initialization
 		void Start () 
 		{
-			m_collider = GetComponent<BoxCollider2D> ();
+			m_collider = GetComponent<BoxCollider2D>();
 		}
+
+        public void Glow()
+        {
+            transform.GetChild(1).GetComponent<ParticleSystem>().startColor = Color.green;
+            transform.GetChild(2).GetComponent<ParticleSystem>().startColor = Color.green;
+        }
 
 		public override void Die()
 		{
